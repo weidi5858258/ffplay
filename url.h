@@ -24,11 +24,18 @@
 #ifndef AVFORMAT_URL_H
 #define AVFORMAT_URL_H
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 #include "avio.h"
 #include "libavformat/version.h"
-
 #include "libavutil/dict.h"
 #include "libavutil/log.h"
+
+#ifdef __cplusplus
+}
+#endif
 
 #define URL_PROTOCOL_FLAG_NESTED_SCHEME 1 /*< The protocol name can be the first part of a nested protocol scheme */
 #define URL_PROTOCOL_FLAG_NETWORK       2 /*< The protocol uses network */

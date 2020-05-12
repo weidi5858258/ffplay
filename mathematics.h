@@ -26,7 +26,9 @@
 
 #ifndef AVUTIL_MATHEMATICS_H
 #define AVUTIL_MATHEMATICS_H
-
+#ifdef __cplusplus
+extern "C" {
+#endif
 #include <stdint.h>
 #include <math.h>
 #include "attributes.h"
@@ -66,7 +68,9 @@
 #ifndef INFINITY
 #define INFINITY       av_int2float(0x7f800000)
 #endif
-
+#ifdef __cplusplus
+}
+#endif
 /**
  * @addtogroup lavu_math
  *

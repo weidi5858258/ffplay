@@ -26,7 +26,9 @@
  * @file
  * miscellaneous OS support macros and functions.
  */
-
+#ifdef __cplusplus
+extern "C" {
+#endif
 #include "config.h"
 
 #include <sys/stat.h>
@@ -246,5 +248,7 @@ fallback:
 #define access      win32_access
 
 #endif
-
+#ifdef __cplusplus
+}
+#endif
 #endif /* AVFORMAT_OS_SUPPORT_H */

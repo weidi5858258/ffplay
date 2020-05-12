@@ -57,60 +57,45 @@ include CMakeFiles/ffplay.dir/progress.make
 # Include the compile flags for this target's objects.
 include CMakeFiles/ffplay.dir/flags.make
 
-CMakeFiles/ffplay.dir/ffplay.c.o: CMakeFiles/ffplay.dir/flags.make
-CMakeFiles/ffplay.dir/ffplay.c.o: ../ffplay.c
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/Users/alexander/mydev/workspace_github/audio_video/ffmpeg_code/ffplay/cmake-build-debug/CMakeFiles --progress-num=$(CMAKE_PROGRESS_1) "Building C object CMakeFiles/ffplay.dir/ffplay.c.o"
-	/Library/Developer/CommandLineTools/usr/bin/cc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -o CMakeFiles/ffplay.dir/ffplay.c.o   -c /Users/alexander/mydev/workspace_github/audio_video/ffmpeg_code/ffplay/ffplay.c
+CMakeFiles/ffplay.dir/cmdutils.cpp.o: CMakeFiles/ffplay.dir/flags.make
+CMakeFiles/ffplay.dir/cmdutils.cpp.o: ../cmdutils.cpp
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/Users/alexander/mydev/workspace_github/audio_video/ffmpeg_code/ffplay/cmake-build-debug/CMakeFiles --progress-num=$(CMAKE_PROGRESS_1) "Building CXX object CMakeFiles/ffplay.dir/cmdutils.cpp.o"
+	/Library/Developer/CommandLineTools/usr/bin/c++  $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/ffplay.dir/cmdutils.cpp.o -c /Users/alexander/mydev/workspace_github/audio_video/ffmpeg_code/ffplay/cmdutils.cpp
 
-CMakeFiles/ffplay.dir/ffplay.c.i: cmake_force
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing C source to CMakeFiles/ffplay.dir/ffplay.c.i"
-	/Library/Developer/CommandLineTools/usr/bin/cc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -E /Users/alexander/mydev/workspace_github/audio_video/ffmpeg_code/ffplay/ffplay.c > CMakeFiles/ffplay.dir/ffplay.c.i
+CMakeFiles/ffplay.dir/cmdutils.cpp.i: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing CXX source to CMakeFiles/ffplay.dir/cmdutils.cpp.i"
+	/Library/Developer/CommandLineTools/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /Users/alexander/mydev/workspace_github/audio_video/ffmpeg_code/ffplay/cmdutils.cpp > CMakeFiles/ffplay.dir/cmdutils.cpp.i
 
-CMakeFiles/ffplay.dir/ffplay.c.s: cmake_force
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling C source to assembly CMakeFiles/ffplay.dir/ffplay.c.s"
-	/Library/Developer/CommandLineTools/usr/bin/cc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -S /Users/alexander/mydev/workspace_github/audio_video/ffmpeg_code/ffplay/ffplay.c -o CMakeFiles/ffplay.dir/ffplay.c.s
+CMakeFiles/ffplay.dir/cmdutils.cpp.s: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/ffplay.dir/cmdutils.cpp.s"
+	/Library/Developer/CommandLineTools/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /Users/alexander/mydev/workspace_github/audio_video/ffmpeg_code/ffplay/cmdutils.cpp -o CMakeFiles/ffplay.dir/cmdutils.cpp.s
 
-CMakeFiles/ffplay.dir/cmdutils.c.o: CMakeFiles/ffplay.dir/flags.make
-CMakeFiles/ffplay.dir/cmdutils.c.o: ../cmdutils.c
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/Users/alexander/mydev/workspace_github/audio_video/ffmpeg_code/ffplay/cmake-build-debug/CMakeFiles --progress-num=$(CMAKE_PROGRESS_2) "Building C object CMakeFiles/ffplay.dir/cmdutils.c.o"
-	/Library/Developer/CommandLineTools/usr/bin/cc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -o CMakeFiles/ffplay.dir/cmdutils.c.o   -c /Users/alexander/mydev/workspace_github/audio_video/ffmpeg_code/ffplay/cmdutils.c
+CMakeFiles/ffplay.dir/ffplay.cpp.o: CMakeFiles/ffplay.dir/flags.make
+CMakeFiles/ffplay.dir/ffplay.cpp.o: ../ffplay.cpp
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/Users/alexander/mydev/workspace_github/audio_video/ffmpeg_code/ffplay/cmake-build-debug/CMakeFiles --progress-num=$(CMAKE_PROGRESS_2) "Building CXX object CMakeFiles/ffplay.dir/ffplay.cpp.o"
+	/Library/Developer/CommandLineTools/usr/bin/c++  $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/ffplay.dir/ffplay.cpp.o -c /Users/alexander/mydev/workspace_github/audio_video/ffmpeg_code/ffplay/ffplay.cpp
 
-CMakeFiles/ffplay.dir/cmdutils.c.i: cmake_force
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing C source to CMakeFiles/ffplay.dir/cmdutils.c.i"
-	/Library/Developer/CommandLineTools/usr/bin/cc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -E /Users/alexander/mydev/workspace_github/audio_video/ffmpeg_code/ffplay/cmdutils.c > CMakeFiles/ffplay.dir/cmdutils.c.i
+CMakeFiles/ffplay.dir/ffplay.cpp.i: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing CXX source to CMakeFiles/ffplay.dir/ffplay.cpp.i"
+	/Library/Developer/CommandLineTools/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /Users/alexander/mydev/workspace_github/audio_video/ffmpeg_code/ffplay/ffplay.cpp > CMakeFiles/ffplay.dir/ffplay.cpp.i
 
-CMakeFiles/ffplay.dir/cmdutils.c.s: cmake_force
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling C source to assembly CMakeFiles/ffplay.dir/cmdutils.c.s"
-	/Library/Developer/CommandLineTools/usr/bin/cc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -S /Users/alexander/mydev/workspace_github/audio_video/ffmpeg_code/ffplay/cmdutils.c -o CMakeFiles/ffplay.dir/cmdutils.c.s
-
-CMakeFiles/ffplay.dir/FFplayer.cpp.o: CMakeFiles/ffplay.dir/flags.make
-CMakeFiles/ffplay.dir/FFplayer.cpp.o: ../FFplayer.cpp
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/Users/alexander/mydev/workspace_github/audio_video/ffmpeg_code/ffplay/cmake-build-debug/CMakeFiles --progress-num=$(CMAKE_PROGRESS_3) "Building CXX object CMakeFiles/ffplay.dir/FFplayer.cpp.o"
-	/Library/Developer/CommandLineTools/usr/bin/c++  $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/ffplay.dir/FFplayer.cpp.o -c /Users/alexander/mydev/workspace_github/audio_video/ffmpeg_code/ffplay/FFplayer.cpp
-
-CMakeFiles/ffplay.dir/FFplayer.cpp.i: cmake_force
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing CXX source to CMakeFiles/ffplay.dir/FFplayer.cpp.i"
-	/Library/Developer/CommandLineTools/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /Users/alexander/mydev/workspace_github/audio_video/ffmpeg_code/ffplay/FFplayer.cpp > CMakeFiles/ffplay.dir/FFplayer.cpp.i
-
-CMakeFiles/ffplay.dir/FFplayer.cpp.s: cmake_force
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/ffplay.dir/FFplayer.cpp.s"
-	/Library/Developer/CommandLineTools/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /Users/alexander/mydev/workspace_github/audio_video/ffmpeg_code/ffplay/FFplayer.cpp -o CMakeFiles/ffplay.dir/FFplayer.cpp.s
+CMakeFiles/ffplay.dir/ffplay.cpp.s: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/ffplay.dir/ffplay.cpp.s"
+	/Library/Developer/CommandLineTools/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /Users/alexander/mydev/workspace_github/audio_video/ffmpeg_code/ffplay/ffplay.cpp -o CMakeFiles/ffplay.dir/ffplay.cpp.s
 
 # Object files for target ffplay
 ffplay_OBJECTS = \
-"CMakeFiles/ffplay.dir/ffplay.c.o" \
-"CMakeFiles/ffplay.dir/cmdutils.c.o" \
-"CMakeFiles/ffplay.dir/FFplayer.cpp.o"
+"CMakeFiles/ffplay.dir/cmdutils.cpp.o" \
+"CMakeFiles/ffplay.dir/ffplay.cpp.o"
 
 # External object files for target ffplay
 ffplay_EXTERNAL_OBJECTS =
 
-ffplay: CMakeFiles/ffplay.dir/ffplay.c.o
-ffplay: CMakeFiles/ffplay.dir/cmdutils.c.o
-ffplay: CMakeFiles/ffplay.dir/FFplayer.cpp.o
+ffplay: CMakeFiles/ffplay.dir/cmdutils.cpp.o
+ffplay: CMakeFiles/ffplay.dir/ffplay.cpp.o
 ffplay: CMakeFiles/ffplay.dir/build.make
 ffplay: CMakeFiles/ffplay.dir/link.txt
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --bold --progress-dir=/Users/alexander/mydev/workspace_github/audio_video/ffmpeg_code/ffplay/cmake-build-debug/CMakeFiles --progress-num=$(CMAKE_PROGRESS_4) "Linking CXX executable ffplay"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --bold --progress-dir=/Users/alexander/mydev/workspace_github/audio_video/ffmpeg_code/ffplay/cmake-build-debug/CMakeFiles --progress-num=$(CMAKE_PROGRESS_3) "Linking CXX executable ffplay"
 	$(CMAKE_COMMAND) -E cmake_link_script CMakeFiles/ffplay.dir/link.txt --verbose=$(VERBOSE)
 
 # Rule to build all files generated by this target.

@@ -3,3 +3,8 @@
 //
 
 #include "FFplayer.h"
+
+int main(int argc, char **argv)
+{
+    printf("FFplayer main()\n");
+}

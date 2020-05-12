@@ -20,7 +20,9 @@
 
 #ifndef AVFORMAT_NETWORK_H
 #define AVFORMAT_NETWORK_H
-
+#ifdef __cplusplus
+extern "C" {
+#endif
 #include <errno.h>
 #include <stdint.h>
 
@@ -75,7 +77,9 @@ int ff_neterrno(void);
 #if HAVE_POLL_H
 #include <poll.h>
 #endif
-
+#ifdef __cplusplus
+}
+#endif
 int ff_socket_nonblock(int socket, int enable);
 
 int ff_network_init(void);

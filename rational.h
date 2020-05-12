@@ -28,11 +28,15 @@
 
 #ifndef AVUTIL_RATIONAL_H
 #define AVUTIL_RATIONAL_H
-
+#ifdef __cplusplus
+extern "C" {
+#endif
 #include <stdint.h>
 #include <limits.h>
 #include "attributes.h"
-
+#ifdef __cplusplus
+}
+#endif
 /**
  * @defgroup lavu_math_rational AVRational
  * @ingroup lavu_math

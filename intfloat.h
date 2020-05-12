@@ -20,10 +20,14 @@
 
 #ifndef AVUTIL_INTFLOAT_H
 #define AVUTIL_INTFLOAT_H
-
+#ifdef __cplusplus
+extern "C" {
+#endif
 #include <stdint.h>
 #include "attributes.h"
-
+#ifdef __cplusplus
+}
+#endif
 union av_intfloat32 {
     uint32_t i;
     float    f;

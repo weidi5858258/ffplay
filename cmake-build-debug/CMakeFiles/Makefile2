@@ -74,12 +74,12 @@ preinstall:
 CMakeFiles/ffplay.dir/all:
 	$(MAKE) -f CMakeFiles/ffplay.dir/build.make CMakeFiles/ffplay.dir/depend
 	$(MAKE) -f CMakeFiles/ffplay.dir/build.make CMakeFiles/ffplay.dir/build
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --progress-dir=/Users/alexander/mydev/workspace_github/audio_video/ffmpeg_code/ffplay/cmake-build-debug/CMakeFiles --progress-num=1,2,3,4 "Built target ffplay"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --progress-dir=/Users/alexander/mydev/workspace_github/audio_video/ffmpeg_code/ffplay/cmake-build-debug/CMakeFiles --progress-num=1,2,3 "Built target ffplay"
 .PHONY : CMakeFiles/ffplay.dir/all
 
 # Build rule for subdir invocation for target.
 CMakeFiles/ffplay.dir/rule: cmake_check_build_system
-	$(CMAKE_COMMAND) -E cmake_progress_start /Users/alexander/mydev/workspace_github/audio_video/ffmpeg_code/ffplay/cmake-build-debug/CMakeFiles 4
+	$(CMAKE_COMMAND) -E cmake_progress_start /Users/alexander/mydev/workspace_github/audio_video/ffmpeg_code/ffplay/cmake-build-debug/CMakeFiles 3
 	$(MAKE) -f CMakeFiles/Makefile2 CMakeFiles/ffplay.dir/all
 	$(CMAKE_COMMAND) -E cmake_progress_start /Users/alexander/mydev/workspace_github/audio_video/ffmpeg_code/ffplay/cmake-build-debug/CMakeFiles 0
 .PHONY : CMakeFiles/ffplay.dir/rule

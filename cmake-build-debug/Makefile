@@ -123,86 +123,59 @@ ffplay/fast:
 	$(MAKE) -f CMakeFiles/ffplay.dir/build.make CMakeFiles/ffplay.dir/build
 .PHONY : ffplay/fast
 
-FFplayer.o: FFplayer.cpp.o
-
-.PHONY : FFplayer.o
-
-# target to build an object file
-FFplayer.cpp.o:
-	$(MAKE) -f CMakeFiles/ffplay.dir/build.make CMakeFiles/ffplay.dir/FFplayer.cpp.o
-.PHONY : FFplayer.cpp.o
-
-FFplayer.i: FFplayer.cpp.i
-
-.PHONY : FFplayer.i
-
-# target to preprocess a source file
-FFplayer.cpp.i:
-	$(MAKE) -f CMakeFiles/ffplay.dir/build.make CMakeFiles/ffplay.dir/FFplayer.cpp.i
-.PHONY : FFplayer.cpp.i
-
-FFplayer.s: FFplayer.cpp.s
-
-.PHONY : FFplayer.s
-
-# target to generate assembly for a file
-FFplayer.cpp.s:
-	$(MAKE) -f CMakeFiles/ffplay.dir/build.make CMakeFiles/ffplay.dir/FFplayer.cpp.s
-.PHONY : FFplayer.cpp.s
-
-cmdutils.o: cmdutils.c.o
+cmdutils.o: cmdutils.cpp.o
 
 .PHONY : cmdutils.o
 
 # target to build an object file
-cmdutils.c.o:
-	$(MAKE) -f CMakeFiles/ffplay.dir/build.make CMakeFiles/ffplay.dir/cmdutils.c.o
-.PHONY : cmdutils.c.o
+cmdutils.cpp.o:
+	$(MAKE) -f CMakeFiles/ffplay.dir/build.make CMakeFiles/ffplay.dir/cmdutils.cpp.o
+.PHONY : cmdutils.cpp.o
 
-cmdutils.i: cmdutils.c.i
+cmdutils.i: cmdutils.cpp.i
 
 .PHONY : cmdutils.i
 
 # target to preprocess a source file
-cmdutils.c.i:
-	$(MAKE) -f CMakeFiles/ffplay.dir/build.make CMakeFiles/ffplay.dir/cmdutils.c.i
-.PHONY : cmdutils.c.i
+cmdutils.cpp.i:
+	$(MAKE) -f CMakeFiles/ffplay.dir/build.make CMakeFiles/ffplay.dir/cmdutils.cpp.i
+.PHONY : cmdutils.cpp.i
 
-cmdutils.s: cmdutils.c.s
+cmdutils.s: cmdutils.cpp.s
 
 .PHONY : cmdutils.s
 
 # target to generate assembly for a file
-cmdutils.c.s:
-	$(MAKE) -f CMakeFiles/ffplay.dir/build.make CMakeFiles/ffplay.dir/cmdutils.c.s
-.PHONY : cmdutils.c.s
+cmdutils.cpp.s:
+	$(MAKE) -f CMakeFiles/ffplay.dir/build.make CMakeFiles/ffplay.dir/cmdutils.cpp.s
+.PHONY : cmdutils.cpp.s
 
-ffplay.o: ffplay.c.o
+ffplay.o: ffplay.cpp.o
 
 .PHONY : ffplay.o
 
 # target to build an object file
-ffplay.c.o:
-	$(MAKE) -f CMakeFiles/ffplay.dir/build.make CMakeFiles/ffplay.dir/ffplay.c.o
-.PHONY : ffplay.c.o
+ffplay.cpp.o:
+	$(MAKE) -f CMakeFiles/ffplay.dir/build.make CMakeFiles/ffplay.dir/ffplay.cpp.o
+.PHONY : ffplay.cpp.o
 
-ffplay.i: ffplay.c.i
+ffplay.i: ffplay.cpp.i
 
 .PHONY : ffplay.i
 
 # target to preprocess a source file
-ffplay.c.i:
-	$(MAKE) -f CMakeFiles/ffplay.dir/build.make CMakeFiles/ffplay.dir/ffplay.c.i
-.PHONY : ffplay.c.i
+ffplay.cpp.i:
+	$(MAKE) -f CMakeFiles/ffplay.dir/build.make CMakeFiles/ffplay.dir/ffplay.cpp.i
+.PHONY : ffplay.cpp.i
 
-ffplay.s: ffplay.c.s
+ffplay.s: ffplay.cpp.s
 
 .PHONY : ffplay.s
 
 # target to generate assembly for a file
-ffplay.c.s:
-	$(MAKE) -f CMakeFiles/ffplay.dir/build.make CMakeFiles/ffplay.dir/ffplay.c.s
-.PHONY : ffplay.c.s
+ffplay.cpp.s:
+	$(MAKE) -f CMakeFiles/ffplay.dir/build.make CMakeFiles/ffplay.dir/ffplay.cpp.s
+.PHONY : ffplay.cpp.s
 
 # Help Target
 help:
@@ -213,9 +186,6 @@ help:
 	@echo "... rebuild_cache"
 	@echo "... edit_cache"
 	@echo "... ffplay"
-	@echo "... FFplayer.o"
-	@echo "... FFplayer.i"
-	@echo "... FFplayer.s"
 	@echo "... cmdutils.o"
 	@echo "... cmdutils.i"
 	@echo "... cmdutils.s"

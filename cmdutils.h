@@ -24,24 +24,23 @@
 
 #include <stdint.h>
 
-#include "config.h"
-
 #ifdef __cplusplus
 extern "C" {
 #endif
 
+#include "config.h"
 #include "libavcodec/avcodec.h"
 #include "libavfilter/avfilter.h"
 #include "libavformat/avformat.h"
 #include "libswscale/swscale.h"
+#ifdef _WIN32
+#undef main /* We don't want SDL to override our main() */
+#endif
 
 #ifdef __cplusplus
 }
 #endif
 
-#ifdef _WIN32
-#undef main /* We don't want SDL to override our main() */
-#endif
 
 /**
  * program name, defined by the program for show_version().
@@ -255,7 +254,7 @@ void show_help_options(const OptionDef *options, const char *msg, int req_flags,
  * Show help for all options with given flags in class and all its
  * children.
  */
-void show_help_children(const AVClass *class, int flags);
+void show_help_children(const AVClass *avClass, int flags);
 
 /**
  * Per-fftool specific help handler. Implemented in each
@@ -624,7 +623,7 @@ FILE *get_preset_file(char *filename, size_t filename_size,
  * @param new_size number of elements to place in reallocated array
  * @return reallocated array
  */
-void *grow_array(void *array, int elem_size, int *size, int new_size);
+void * grow_array(void *array, int elem_size, int *size, int new_size);
 
 #define media_type_string av_get_media_type_string
 
@@ -644,9 +643,14 @@ void *grow_array(void *array, int elem_size, int *size, int new_size);
     char name[16];\
     snprintf(name, sizeof(name), "%d", rate);
 
+// C
+//#define GET_CH_LAYOUT_NAME(ch_layout)\
+//    char name[16];\
+//    snprintf(name, sizeof(name), "0x%"PRIx64, ch_layout);
+// C++
 #define GET_CH_LAYOUT_NAME(ch_layout)\
     char name[16];\
-    snprintf(name, sizeof(name), "0x%"PRIx64, ch_layout);
+    snprintf(name, sizeof(name), "0x%" PRIx64, ch_layout);
 
 #define GET_CH_LAYOUT_DESC(ch_layout)\
     char name[128];\

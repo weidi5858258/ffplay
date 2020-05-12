@@ -92,19 +92,13 @@
 				</MakeCommands>
 			</Target>
 		</Build>
-		<Unit filename="/Users/alexander/mydev/workspace_github/audio_video/ffmpeg_code/ffplay/FFplayer.cpp">
-			<Option target="ffplay"/>
-		</Unit>
-		<Unit filename="/Users/alexander/mydev/workspace_github/audio_video/ffmpeg_code/ffplay/FFplayer.h">
-			<Option target="ffplay"/>
-		</Unit>
 		<Unit filename="/Users/alexander/mydev/workspace_github/audio_video/ffmpeg_code/ffplay/attributes.h">
 			<Option target="ffplay"/>
 		</Unit>
 		<Unit filename="/Users/alexander/mydev/workspace_github/audio_video/ffmpeg_code/ffplay/avio.h">
 			<Option target="ffplay"/>
 		</Unit>
-		<Unit filename="/Users/alexander/mydev/workspace_github/audio_video/ffmpeg_code/ffplay/cmdutils.c">
+		<Unit filename="/Users/alexander/mydev/workspace_github/audio_video/ffmpeg_code/ffplay/cmdutils.cpp">
 			<Option target="ffplay"/>
 		</Unit>
 		<Unit filename="/Users/alexander/mydev/workspace_github/audio_video/ffmpeg_code/ffplay/cmdutils.h">
@@ -113,10 +107,7 @@
 		<Unit filename="/Users/alexander/mydev/workspace_github/audio_video/ffmpeg_code/ffplay/config.h">
 			<Option target="ffplay"/>
 		</Unit>
-		<Unit filename="/Users/alexander/mydev/workspace_github/audio_video/ffmpeg_code/ffplay/ffplay.c">
-			<Option target="ffplay"/>
-		</Unit>
-		<Unit filename="/Users/alexander/mydev/workspace_github/audio_video/ffmpeg_code/ffplay/ffplay.h">
+		<Unit filename="/Users/alexander/mydev/workspace_github/audio_video/ffmpeg_code/ffplay/ffplay.cpp">
 			<Option target="ffplay"/>
 		</Unit>
 		<Unit filename="/Users/alexander/mydev/workspace_github/audio_video/ffmpeg_code/ffplay/intfloat.h">

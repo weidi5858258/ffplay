@@ -6,7 +6,7 @@ set(CMAKE_CXX_STANDARD 14)
 
 #set(CMAKE_CXX_STANDARD 11)
 # 使用ffplay的代码时需要注释掉
-#add_definitions(-std=c++11)
+add_definitions(-std=c++11)
 
 include_directories(.)
 
@@ -20,20 +20,19 @@ add_executable(
         network.h
         va_copy.h
         cmdutils.h
-        cmdutils.c
         intfloat.h
         rational.h
         attributes.h
         os_support.h
         mathematics.h
 
-#        ffplay.h
-        ffplay.c
-#        ffplay_audio.c
-#        ffplay_media.c
+        cmdutils.cpp
+        ffplay.cpp
 
-        FFplayer.h
-        FFplayer.cpp
+#        ffplay.c
+#        cmdutils.c
+#        FFplayer.h
+#        FFplayer.cpp
 )
 # 要包含的头文件
 include_directories(

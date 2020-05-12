@@ -25,6 +25,10 @@
 #ifndef AVUTIL_LIBM_H
 #define AVUTIL_LIBM_H
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 #include <math.h>
 #include "config.h"
 #include "attributes.h"
@@ -467,5 +471,9 @@ static av_always_inline av_const float truncf(float x)
     return (x > 0) ? floor(x) : ceil(x);
 }
 #endif /* HAVE_TRUNCF */
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif /* AVUTIL_LIBM_H */
