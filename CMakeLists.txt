@@ -13,19 +13,19 @@ include_directories(.)
 add_executable(
         ffplay
 
-        attributes.h
+        url.h
         avio.h
-        cmdutils.h
+        libm.h
         config.h
         ffplay.h
-        intfloat.h
-        libm.h
-        mathematics.h
         network.h
-        os_support.h
-        rational.h
-        url.h
         va_copy.h
+        cmdutils.h
+        intfloat.h
+        rational.h
+        attributes.h
+        os_support.h
+        mathematics.h
 
 #        ffplay.c
 #        ffplay_audio.c
