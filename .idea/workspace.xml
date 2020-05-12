@@ -11,7 +11,26 @@
     </configurations>
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="c95f9eb1-9f4d-42e7-b485-47c985a27ef1" name="Default Changelist" comment="" />
+    <list default="true" id="c95f9eb1-9f4d-42e7-b485-47c985a27ef1" name="Default Changelist" comment="">
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/CMakeLists.txt" beforeDir="false" afterPath="$PROJECT_DIR$/CMakeLists.txt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/ffplay.dir/C.includecache" beforeDir="false" afterPath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/ffplay.dir/C.includecache" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/ffplay.dir/DependInfo.cmake" beforeDir="false" afterPath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/ffplay.dir/DependInfo.cmake" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/ffplay.dir/build.make" beforeDir="false" afterPath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/ffplay.dir/build.make" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/ffplay.dir/cmake_clean.cmake" beforeDir="false" afterPath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/ffplay.dir/cmake_clean.cmake" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/ffplay.dir/cmdutils.c.o" beforeDir="false" afterPath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/ffplay.dir/cmdutils.c.o" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/ffplay.dir/depend.internal" beforeDir="false" afterPath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/ffplay.dir/depend.internal" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/ffplay.dir/depend.make" beforeDir="false" afterPath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/ffplay.dir/depend.make" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/ffplay.dir/ffplay_media.c.o" beforeDir="false" afterPath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/ffplay.dir/ffplay_media.c.o" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/ffplay.dir/link.txt" beforeDir="false" afterPath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/ffplay.dir/link.txt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/cmake-build-debug/Makefile" beforeDir="false" afterPath="$PROJECT_DIR$/cmake-build-debug/Makefile" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/cmake-build-debug/ffplay" beforeDir="false" afterPath="$PROJECT_DIR$/cmake-build-debug/ffplay" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/cmake-build-debug/ffplay.cbp" beforeDir="false" afterPath="$PROJECT_DIR$/cmake-build-debug/ffplay.cbp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/cmdutils.c" beforeDir="false" afterPath="$PROJECT_DIR$/cmdutils.c" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/cmdutils.h" beforeDir="false" afterPath="$PROJECT_DIR$/cmdutils.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/config.h" beforeDir="false" afterPath="$PROJECT_DIR$/config.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/ffplay.c" beforeDir="false" afterPath="$PROJECT_DIR$/ffplay.c" afterDir="false" />
+    </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -25,6 +44,7 @@
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
   </component>
   <component name="ProjectId" id="1bn0ykymNP6yo6jbjBzv3ea9EDm" />
+  <component name="ProjectLevelVcsManager" settingsEditedManually="true" />
   <component name="ProjectViewState">
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showExcludedFiles" value="true" />
@@ -64,21 +84,25 @@
     <option name="version" value="1" />
   </component>
   <component name="WindowStateProjectService">
-    <state width="1808" height="282" key="GridCell.Tab.0.bottom" timestamp="1589253236776">
-      <screen x="70" y="23" width="1850" height="1057" />
+    <state width="1808" height="282" key="GridCell.Tab.0.bottom" timestamp="1589257684507">
+      <screen x="68" y="23" width="1852" height="1057" />
     </state>
+    <state width="1808" height="282" key="GridCell.Tab.0.bottom/68.23.1852.1057@68.23.1852.1057" timestamp="1589257684507" />
     <state width="1808" height="282" key="GridCell.Tab.0.bottom/70.23.1850.1057@70.23.1850.1057" timestamp="1589253236776" />
-    <state width="1808" height="282" key="GridCell.Tab.0.center" timestamp="1589253236775">
-      <screen x="70" y="23" width="1850" height="1057" />
+    <state width="1808" height="282" key="GridCell.Tab.0.center" timestamp="1589257684507">
+      <screen x="68" y="23" width="1852" height="1057" />
     </state>
+    <state width="1808" height="282" key="GridCell.Tab.0.center/68.23.1852.1057@68.23.1852.1057" timestamp="1589257684507" />
     <state width="1808" height="282" key="GridCell.Tab.0.center/70.23.1850.1057@70.23.1850.1057" timestamp="1589253236775" />
-    <state width="1808" height="282" key="GridCell.Tab.0.left" timestamp="1589253236774">
-      <screen x="70" y="23" width="1850" height="1057" />
+    <state width="1808" height="282" key="GridCell.Tab.0.left" timestamp="1589257684506">
+      <screen x="68" y="23" width="1852" height="1057" />
     </state>
+    <state width="1808" height="282" key="GridCell.Tab.0.left/68.23.1852.1057@68.23.1852.1057" timestamp="1589257684506" />
     <state width="1808" height="282" key="GridCell.Tab.0.left/70.23.1850.1057@70.23.1850.1057" timestamp="1589253236774" />
-    <state width="1808" height="282" key="GridCell.Tab.0.right" timestamp="1589253236776">
-      <screen x="70" y="23" width="1850" height="1057" />
+    <state width="1808" height="282" key="GridCell.Tab.0.right" timestamp="1589257684507">
+      <screen x="68" y="23" width="1852" height="1057" />
     </state>
+    <state width="1808" height="282" key="GridCell.Tab.0.right/68.23.1852.1057@68.23.1852.1057" timestamp="1589257684507" />
     <state width="1808" height="282" key="GridCell.Tab.0.right/70.23.1850.1057@70.23.1850.1057" timestamp="1589253236776" />
   </component>
 </project>

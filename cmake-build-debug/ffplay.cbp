@@ -113,10 +113,10 @@
 		<Unit filename="/Users/alexander/mydev/workspace_github/audio_video/ffmpeg_code/ffplay/config.h">
 			<Option target="ffplay"/>
 		</Unit>
-		<Unit filename="/Users/alexander/mydev/workspace_github/audio_video/ffmpeg_code/ffplay/ffplay.h">
+		<Unit filename="/Users/alexander/mydev/workspace_github/audio_video/ffmpeg_code/ffplay/ffplay.c">
 			<Option target="ffplay"/>
 		</Unit>
-		<Unit filename="/Users/alexander/mydev/workspace_github/audio_video/ffmpeg_code/ffplay/ffplay_media.c">
+		<Unit filename="/Users/alexander/mydev/workspace_github/audio_video/ffmpeg_code/ffplay/ffplay.h">
 			<Option target="ffplay"/>
 		</Unit>
 		<Unit filename="/Users/alexander/mydev/workspace_github/audio_video/ffmpeg_code/ffplay/intfloat.h">

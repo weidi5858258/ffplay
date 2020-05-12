@@ -1,7 +1,7 @@
 file(REMOVE_RECURSE
   "CMakeFiles/ffplay.dir/FFplayer.cpp.o"
   "CMakeFiles/ffplay.dir/cmdutils.c.o"
-  "CMakeFiles/ffplay.dir/ffplay_media.c.o"
+  "CMakeFiles/ffplay.dir/ffplay.c.o"
   "ffplay"
   "ffplay.pdb"
 )

@@ -6,7 +6,7 @@ set(CMAKE_DEPENDS_LANGUAGES
 # The set of files for implicit dependencies of each language:
 set(CMAKE_DEPENDS_CHECK_C
   "/Users/alexander/mydev/workspace_github/audio_video/ffmpeg_code/ffplay/cmdutils.c" "/Users/alexander/mydev/workspace_github/audio_video/ffmpeg_code/ffplay/cmake-build-debug/CMakeFiles/ffplay.dir/cmdutils.c.o"
-  "/Users/alexander/mydev/workspace_github/audio_video/ffmpeg_code/ffplay/ffplay_media.c" "/Users/alexander/mydev/workspace_github/audio_video/ffmpeg_code/ffplay/cmake-build-debug/CMakeFiles/ffplay.dir/ffplay_media.c.o"
+  "/Users/alexander/mydev/workspace_github/audio_video/ffmpeg_code/ffplay/ffplay.c" "/Users/alexander/mydev/workspace_github/audio_video/ffmpeg_code/ffplay/cmake-build-debug/CMakeFiles/ffplay.dir/ffplay.c.o"
   )
 set(CMAKE_C_COMPILER_ID "AppleClang")
 

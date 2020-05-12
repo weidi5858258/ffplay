@@ -23,8 +23,6 @@
 #define FFTOOLS_CMDUTILS_H
 
 #include <stdint.h>
-#include <stdio.h>
-#include <secure/_stdio.h>
 
 #include "config.h"
 
@@ -82,7 +80,6 @@ void init_dynload(void);
  * allocate the *_opts contexts.
  */
 void init_opts(void);
-
 /**
  * Uninitialize the cmdutils option system, in particular
  * free the *_opts contexts and their contents.
@@ -93,7 +90,7 @@ void uninit_opts(void);
  * Trivial log callback.
  * Only suitable for opt_help and similar since it lacks prefix handling.
  */
-void log_callback_help(void *ptr, int level, const char *fmt, va_list vl);
+void log_callback_help(void* ptr, int level, const char* fmt, va_list vl);
 
 /**
  * Override the cpuflags.
@@ -159,15 +156,17 @@ typedef struct SpecifierOpt {
     char *specifier;    /**< stream/chapter/program/... specifier */
     union {
         uint8_t *str;
-        int i;
-        int64_t i64;
+        int        i;
+        int64_t  i64;
         uint64_t ui64;
-        float f;
-        double dbl;
+        float      f;
+        double   dbl;
     } u;
 } SpecifierOpt;
 
 typedef struct OptionDef {
+    const char *name;
+    int flags;
 #define HAS_ARG    0x0001
 #define OPT_BOOL   0x0002
 #define OPT_EXPERT 0x0004
@@ -190,17 +189,11 @@ typedef struct OptionDef {
 #define OPT_DOUBLE 0x20000
 #define OPT_INPUT  0x40000
 #define OPT_OUTPUT 0x80000
-    const char *name;
-    int flags;
-
-    union {
+     union {
         void *dst_ptr;
-
         int (*func_arg)(void *, const char *, const char *);
-
         size_t off;
     } u;
-
     const char *help;
     const char *argname;
 } OptionDef;
@@ -258,12 +251,11 @@ void show_help_options(const OptionDef *options, const char *msg, int req_flags,
     { "hide_banner", OPT_BOOL | OPT_EXPERT, {&hide_banner},     "do not show program banner", "hide_banner" },          \
     CMDUTILS_COMMON_OPTIONS_AVDEVICE                                                                                    \
 
-
 /**
  * Show help for all options with given flags in class and all its
  * children.
  */
-void show_help_children(const AVClass *avClass, int flags);
+void show_help_children(const AVClass *class, int flags);
 
 /**
  * Per-fftool specific help handler. Implemented in each
@@ -289,7 +281,7 @@ int show_help(void *optctx, const char *opt, const char *arg);
  * not have to be processed.
  */
 void parse_options(void *optctx, int argc, char **argv, const OptionDef *options,
-                   void (*parse_arg_function)(void *optctx, const char *));
+                   void (* parse_arg_function)(void *optctx, const char*));
 
 /**
  * Parse one given option.
@@ -305,9 +297,9 @@ int parse_option(void *optctx, const char *opt, const char *arg,
  * used multiple times.
  */
 typedef struct Option {
-    const OptionDef *opt;
-    const char *key;
-    const char *val;
+    const OptionDef  *opt;
+    const char       *key;
+    const char       *val;
 } Option;
 
 typedef struct OptionGroupDef {
@@ -330,7 +322,7 @@ typedef struct OptionGroup {
     const char *arg;
 
     Option *opts;
-    int nb_opts;
+    int  nb_opts;
 
     AVDictionary *codec_opts;
     AVDictionary *format_opts;
@@ -347,14 +339,14 @@ typedef struct OptionGroupList {
     const OptionGroupDef *group_def;
 
     OptionGroup *groups;
-    int nb_groups;
+    int       nb_groups;
 } OptionGroupList;
 
 typedef struct OptionParseContext {
     OptionGroup global_opts;
 
     OptionGroupList *groups;
-    int nb_groups;
+    int           nb_groups;
 
     /* parsing state */
     OptionGroup cur_group;
@@ -516,7 +508,6 @@ int show_demuxers(void *optctx, const char *opt, const char *arg);
 int show_devices(void *optctx, const char *opt, const char *arg);
 
 #if CONFIG_AVDEVICE
-
 /**
  * Print a listing containing autodetected sinks of the output device.
  * Device name with options may be passed as an argument to limit results.
@@ -528,7 +519,6 @@ int show_sinks(void *optctx, const char *opt, const char *arg);
  * Device name with options may be passed as an argument to limit results.
  */
 int show_sources(void *optctx, const char *opt, const char *arg);
-
 #endif
 
 /**
@@ -634,7 +624,7 @@ FILE *get_preset_file(char *filename, size_t filename_size,
  * @param new_size number of elements to place in reallocated array
  * @return reallocated array
  */
-OptionGroup * grow_array(void *array, int elem_size, int *size, int new_size);
+void *grow_array(void *array, int elem_size, int *size, int new_size);
 
 #define media_type_string av_get_media_type_string
 
@@ -656,7 +646,7 @@ OptionGroup * grow_array(void *array, int elem_size, int *size, int new_size);
 
 #define GET_CH_LAYOUT_NAME(ch_layout)\
     char name[16];\
-    snprintf(name, sizeof(name), "0x%" PRIx64, ch_layout);
+    snprintf(name, sizeof(name), "0x%"PRIx64, ch_layout);
 
 #define GET_CH_LAYOUT_DESC(ch_layout)\
     char name[128];\

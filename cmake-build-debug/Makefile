@@ -177,32 +177,32 @@ cmdutils.c.s:
 	$(MAKE) -f CMakeFiles/ffplay.dir/build.make CMakeFiles/ffplay.dir/cmdutils.c.s
 .PHONY : cmdutils.c.s
 
-ffplay_media.o: ffplay_media.c.o
+ffplay.o: ffplay.c.o
 
-.PHONY : ffplay_media.o
+.PHONY : ffplay.o
 
 # target to build an object file
-ffplay_media.c.o:
-	$(MAKE) -f CMakeFiles/ffplay.dir/build.make CMakeFiles/ffplay.dir/ffplay_media.c.o
-.PHONY : ffplay_media.c.o
+ffplay.c.o:
+	$(MAKE) -f CMakeFiles/ffplay.dir/build.make CMakeFiles/ffplay.dir/ffplay.c.o
+.PHONY : ffplay.c.o
 
-ffplay_media.i: ffplay_media.c.i
+ffplay.i: ffplay.c.i
 
-.PHONY : ffplay_media.i
+.PHONY : ffplay.i
 
 # target to preprocess a source file
-ffplay_media.c.i:
-	$(MAKE) -f CMakeFiles/ffplay.dir/build.make CMakeFiles/ffplay.dir/ffplay_media.c.i
-.PHONY : ffplay_media.c.i
+ffplay.c.i:
+	$(MAKE) -f CMakeFiles/ffplay.dir/build.make CMakeFiles/ffplay.dir/ffplay.c.i
+.PHONY : ffplay.c.i
 
-ffplay_media.s: ffplay_media.c.s
+ffplay.s: ffplay.c.s
 
-.PHONY : ffplay_media.s
+.PHONY : ffplay.s
 
 # target to generate assembly for a file
-ffplay_media.c.s:
-	$(MAKE) -f CMakeFiles/ffplay.dir/build.make CMakeFiles/ffplay.dir/ffplay_media.c.s
-.PHONY : ffplay_media.c.s
+ffplay.c.s:
+	$(MAKE) -f CMakeFiles/ffplay.dir/build.make CMakeFiles/ffplay.dir/ffplay.c.s
+.PHONY : ffplay.c.s
 
 # Help Target
 help:
@@ -219,9 +219,9 @@ help:
 	@echo "... cmdutils.o"
 	@echo "... cmdutils.i"
 	@echo "... cmdutils.s"
-	@echo "... ffplay_media.o"
-	@echo "... ffplay_media.i"
-	@echo "... ffplay_media.s"
+	@echo "... ffplay.o"
+	@echo "... ffplay.i"
+	@echo "... ffplay.s"
 .PHONY : help
 
 

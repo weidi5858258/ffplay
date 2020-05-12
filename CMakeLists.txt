@@ -17,20 +17,20 @@ add_executable(
         avio.h
         libm.h
         config.h
-        ffplay.h
         network.h
         va_copy.h
         cmdutils.h
+        cmdutils.c
         intfloat.h
         rational.h
         attributes.h
         os_support.h
         mathematics.h
 
-#        ffplay.c
+#        ffplay.h
+        ffplay.c
 #        ffplay_audio.c
-        cmdutils.c
-        ffplay_media.c
+#        ffplay_media.c
 
         FFplayer.h
         FFplayer.cpp
