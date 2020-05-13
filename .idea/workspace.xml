@@ -11,10 +11,7 @@
     </configurations>
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="c95f9eb1-9f4d-42e7-b485-47c985a27ef1" name="Default Changelist" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/ffplay.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/ffplay.cpp" afterDir="false" />
-    </list>
+    <list default="true" id="c95f9eb1-9f4d-42e7-b485-47c985a27ef1" name="Default Changelist" comment="" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -66,7 +63,7 @@
       <updated>1589252806379</updated>
       <workItem from="1589252807695" duration="23000" />
       <workItem from="1589252872391" duration="732000" />
-      <workItem from="1589359321812" duration="3590000" />
+      <workItem from="1589359321812" duration="3985000" />
     </task>
     <servers />
   </component>
