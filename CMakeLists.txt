@@ -25,14 +25,16 @@ add_executable(
         attributes.h
         os_support.h
         mathematics.h
+        # 原来的文件
+#        cmdutils.c
+#        ffplay.c
 
+        # 自己新增的文件
         cmdutils.cpp
         ffplay.cpp
 
-#        ffplay.c
-#        cmdutils.c
-#        FFplayer.h
-#        FFplayer.cpp
+        FFplayer.h
+        FFplayer.cpp
 )
 # 要包含的头文件
 include_directories(

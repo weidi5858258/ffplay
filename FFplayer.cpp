@@ -4,7 +4,7 @@
 
 #include "FFplayer.h"
 
-int main(int argc, char **argv)
+int main2(int argc, char **argv)
 {
     printf("FFplayer main()\n");
 }

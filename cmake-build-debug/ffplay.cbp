@@ -92,6 +92,12 @@
 				</MakeCommands>
 			</Target>
 		</Build>
+		<Unit filename="/Users/alexander/mydev/workspace_github/audio_video/ffmpeg_code/ffplay/FFplayer.cpp">
+			<Option target="ffplay"/>
+		</Unit>
+		<Unit filename="/Users/alexander/mydev/workspace_github/audio_video/ffmpeg_code/ffplay/FFplayer.h">
+			<Option target="ffplay"/>
+		</Unit>
 		<Unit filename="/Users/alexander/mydev/workspace_github/audio_video/ffmpeg_code/ffplay/attributes.h">
 			<Option target="ffplay"/>
 		</Unit>

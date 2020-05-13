@@ -34,7 +34,6 @@
 extern "C" {
 #endif
 
-
 #include "config.h"
 #include "va_copy.h"
 #include "avio.h"

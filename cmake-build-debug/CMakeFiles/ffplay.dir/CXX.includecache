@@ -6,23 +6,11 @@
 
 #IncludeRegexTransform: 
 
-/Users/alexander/mydev/workspace_github/audio_video/ffmpeg_code/ffplay/cmdutils.h
-stdint.h
--
-config.h
-/Users/alexander/mydev/workspace_github/audio_video/ffmpeg_code/ffplay/config.h
-libavcodec/avcodec.h
-/Users/alexander/mydev/workspace_github/audio_video/ffmpeg_code/ffplay/libavcodec/avcodec.h
-libavfilter/avfilter.h
-/Users/alexander/mydev/workspace_github/audio_video/ffmpeg_code/ffplay/libavfilter/avfilter.h
-libavformat/avformat.h
-/Users/alexander/mydev/workspace_github/audio_video/ffmpeg_code/ffplay/libavformat/avformat.h
-libswscale/swscale.h
-/Users/alexander/mydev/workspace_github/audio_video/ffmpeg_code/ffplay/libswscale/swscale.h
+/Users/alexander/mydev/workspace_github/audio_video/ffmpeg_code/ffplay/FFplayer.cpp
+FFplayer.h
+/Users/alexander/mydev/workspace_github/audio_video/ffmpeg_code/ffplay/FFplayer.h
 
-/Users/alexander/mydev/workspace_github/audio_video/ffmpeg_code/ffplay/config.h
-
-/Users/alexander/mydev/workspace_github/audio_video/ffmpeg_code/ffplay/ffplay.cpp
+/Users/alexander/mydev/workspace_github/audio_video/ffmpeg_code/ffplay/FFplayer.h
 config.h
 /Users/alexander/mydev/workspace_github/audio_video/ffmpeg_code/ffplay/config.h
 inttypes.h
@@ -83,6 +71,26 @@ cmdutils.h
 /Users/alexander/mydev/workspace_github/audio_video/ffmpeg_code/ffplay/cmdutils.h
 assert.h
 -
+
+/Users/alexander/mydev/workspace_github/audio_video/ffmpeg_code/ffplay/cmdutils.h
+stdint.h
+-
+config.h
+/Users/alexander/mydev/workspace_github/audio_video/ffmpeg_code/ffplay/config.h
+libavcodec/avcodec.h
+/Users/alexander/mydev/workspace_github/audio_video/ffmpeg_code/ffplay/libavcodec/avcodec.h
+libavfilter/avfilter.h
+/Users/alexander/mydev/workspace_github/audio_video/ffmpeg_code/ffplay/libavfilter/avfilter.h
+libavformat/avformat.h
+/Users/alexander/mydev/workspace_github/audio_video/ffmpeg_code/ffplay/libavformat/avformat.h
+libswscale/swscale.h
+/Users/alexander/mydev/workspace_github/audio_video/ffmpeg_code/ffplay/libswscale/swscale.h
+
+/Users/alexander/mydev/workspace_github/audio_video/ffmpeg_code/ffplay/config.h
+
+/Users/alexander/mydev/workspace_github/audio_video/ffmpeg_code/ffplay/ffplay.cpp
+FFplayer.h
+/Users/alexander/mydev/workspace_github/audio_video/ffmpeg_code/ffplay/FFplayer.h
 
 /usr/local/Cellar/sdl2/2.0.10/include/SDL2/SDL.h
 SDL_main.h

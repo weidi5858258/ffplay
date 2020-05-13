@@ -123,6 +123,33 @@ ffplay/fast:
 	$(MAKE) -f CMakeFiles/ffplay.dir/build.make CMakeFiles/ffplay.dir/build
 .PHONY : ffplay/fast
 
+FFplayer.o: FFplayer.cpp.o
+
+.PHONY : FFplayer.o
+
+# target to build an object file
+FFplayer.cpp.o:
+	$(MAKE) -f CMakeFiles/ffplay.dir/build.make CMakeFiles/ffplay.dir/FFplayer.cpp.o
+.PHONY : FFplayer.cpp.o
+
+FFplayer.i: FFplayer.cpp.i
+
+.PHONY : FFplayer.i
+
+# target to preprocess a source file
+FFplayer.cpp.i:
+	$(MAKE) -f CMakeFiles/ffplay.dir/build.make CMakeFiles/ffplay.dir/FFplayer.cpp.i
+.PHONY : FFplayer.cpp.i
+
+FFplayer.s: FFplayer.cpp.s
+
+.PHONY : FFplayer.s
+
+# target to generate assembly for a file
+FFplayer.cpp.s:
+	$(MAKE) -f CMakeFiles/ffplay.dir/build.make CMakeFiles/ffplay.dir/FFplayer.cpp.s
+.PHONY : FFplayer.cpp.s
+
 cmdutils.o: cmdutils.cpp.o
 
 .PHONY : cmdutils.o
@@ -186,6 +213,9 @@ help:
 	@echo "... rebuild_cache"
 	@echo "... edit_cache"
 	@echo "... ffplay"
+	@echo "... FFplayer.o"
+	@echo "... FFplayer.i"
+	@echo "... FFplayer.s"
 	@echo "... cmdutils.o"
 	@echo "... cmdutils.i"
 	@echo "... cmdutils.s"

@@ -4,6 +4,7 @@ set(CMAKE_DEPENDS_LANGUAGES
   )
 # The set of files for implicit dependencies of each language:
 set(CMAKE_DEPENDS_CHECK_CXX
+  "/Users/alexander/mydev/workspace_github/audio_video/ffmpeg_code/ffplay/FFplayer.cpp" "/Users/alexander/mydev/workspace_github/audio_video/ffmpeg_code/ffplay/cmake-build-debug/CMakeFiles/ffplay.dir/FFplayer.cpp.o"
   "/Users/alexander/mydev/workspace_github/audio_video/ffmpeg_code/ffplay/cmdutils.cpp" "/Users/alexander/mydev/workspace_github/audio_video/ffmpeg_code/ffplay/cmake-build-debug/CMakeFiles/ffplay.dir/cmdutils.cpp.o"
   "/Users/alexander/mydev/workspace_github/audio_video/ffmpeg_code/ffplay/ffplay.cpp" "/Users/alexander/mydev/workspace_github/audio_video/ffmpeg_code/ffplay/cmake-build-debug/CMakeFiles/ffplay.dir/ffplay.cpp.o"
   )

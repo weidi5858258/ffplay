@@ -12,40 +12,29 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="c95f9eb1-9f4d-42e7-b485-47c985a27ef1" name="Default Changelist" comment="">
-      <change afterPath="$PROJECT_DIR$/cmdutils.cpp" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/ffplay.cpp" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/CMakeLists.txt" beforeDir="false" afterPath="$PROJECT_DIR$/CMakeLists.txt" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/FFplayer.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/FFplayer.cpp" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/FFplayer.h" beforeDir="false" afterPath="$PROJECT_DIR$/FFplayer.h" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/avio.h" beforeDir="false" afterPath="$PROJECT_DIR$/avio.h" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/Makefile2" beforeDir="false" afterPath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/Makefile2" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/Progress/3" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/Progress/count.txt" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/ffplay.dir/CXX.includecache" beforeDir="false" afterPath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/ffplay.dir/CXX.includecache" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/ffplay.dir/DependInfo.cmake" beforeDir="false" afterPath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/ffplay.dir/DependInfo.cmake" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/ffplay.dir/FFplayer.cpp.o" beforeDir="false" afterPath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/ffplay.dir/FFplayer.cpp.o" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/ffplay.dir/build.make" beforeDir="false" afterPath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/ffplay.dir/build.make" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/ffplay.dir/cmake_clean.cmake" beforeDir="false" afterPath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/ffplay.dir/cmake_clean.cmake" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/ffplay.dir/cmdutils.cpp.o" beforeDir="false" afterPath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/ffplay.dir/cmdutils.cpp.o" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/ffplay.dir/depend.internal" beforeDir="false" afterPath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/ffplay.dir/depend.internal" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/ffplay.dir/depend.make" beforeDir="false" afterPath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/ffplay.dir/depend.make" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/ffplay.dir/flags.make" beforeDir="false" afterPath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/ffplay.dir/flags.make" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/ffplay.dir/ffplay.cpp.o" beforeDir="false" afterPath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/ffplay.dir/ffplay.cpp.o" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/ffplay.dir/link.txt" beforeDir="false" afterPath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/ffplay.dir/link.txt" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/ffplay.dir/progress.make" beforeDir="false" afterPath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/ffplay.dir/progress.make" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/progress.marks" beforeDir="false" afterPath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/progress.marks" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/cmake-build-debug/Makefile" beforeDir="false" afterPath="$PROJECT_DIR$/cmake-build-debug/Makefile" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/cmake-build-debug/ffplay" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/cmake-build-debug/ffplay.cbp" beforeDir="false" afterPath="$PROJECT_DIR$/cmake-build-debug/ffplay.cbp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/cmdutils.h" beforeDir="false" afterPath="$PROJECT_DIR$/cmdutils.h" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/ffplay.h" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/ffplay_audio.c" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/ffplay_media.c" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/intfloat.h" beforeDir="false" afterPath="$PROJECT_DIR$/intfloat.h" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/libm.h" beforeDir="false" afterPath="$PROJECT_DIR$/libm.h" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/mathematics.h" beforeDir="false" afterPath="$PROJECT_DIR$/mathematics.h" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/network.h" beforeDir="false" afterPath="$PROJECT_DIR$/network.h" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/os_support.h" beforeDir="false" afterPath="$PROJECT_DIR$/os_support.h" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/rational.h" beforeDir="false" afterPath="$PROJECT_DIR$/rational.h" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/url.h" beforeDir="false" afterPath="$PROJECT_DIR$/url.h" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/va_copy.h" beforeDir="false" afterPath="$PROJECT_DIR$/va_copy.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/cmdutils.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/cmdutils.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/ffplay.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/ffplay.cpp" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -105,25 +94,25 @@
     <option name="version" value="1" />
   </component>
   <component name="WindowStateProjectService">
-    <state width="1808" height="282" key="GridCell.Tab.0.bottom" timestamp="1589261985322">
+    <state width="1808" height="302" key="GridCell.Tab.0.bottom" timestamp="1589266678113">
       <screen x="68" y="23" width="1852" height="1057" />
     </state>
-    <state width="1808" height="282" key="GridCell.Tab.0.bottom/68.23.1852.1057@68.23.1852.1057" timestamp="1589261985322" />
+    <state width="1808" height="302" key="GridCell.Tab.0.bottom/68.23.1852.1057@68.23.1852.1057" timestamp="1589266678113" />
     <state width="1808" height="282" key="GridCell.Tab.0.bottom/70.23.1850.1057@70.23.1850.1057" timestamp="1589253236776" />
-    <state width="1808" height="282" key="GridCell.Tab.0.center" timestamp="1589261985321">
+    <state width="1808" height="302" key="GridCell.Tab.0.center" timestamp="1589266678112">
       <screen x="68" y="23" width="1852" height="1057" />
     </state>
-    <state width="1808" height="282" key="GridCell.Tab.0.center/68.23.1852.1057@68.23.1852.1057" timestamp="1589261985321" />
+    <state width="1808" height="302" key="GridCell.Tab.0.center/68.23.1852.1057@68.23.1852.1057" timestamp="1589266678112" />
     <state width="1808" height="282" key="GridCell.Tab.0.center/70.23.1850.1057@70.23.1850.1057" timestamp="1589253236775" />
-    <state width="1808" height="282" key="GridCell.Tab.0.left" timestamp="1589261985320">
+    <state width="1808" height="302" key="GridCell.Tab.0.left" timestamp="1589266678111">
       <screen x="68" y="23" width="1852" height="1057" />
     </state>
-    <state width="1808" height="282" key="GridCell.Tab.0.left/68.23.1852.1057@68.23.1852.1057" timestamp="1589261985320" />
+    <state width="1808" height="302" key="GridCell.Tab.0.left/68.23.1852.1057@68.23.1852.1057" timestamp="1589266678111" />
     <state width="1808" height="282" key="GridCell.Tab.0.left/70.23.1850.1057@70.23.1850.1057" timestamp="1589253236774" />
-    <state width="1808" height="282" key="GridCell.Tab.0.right" timestamp="1589261985321">
+    <state width="1808" height="302" key="GridCell.Tab.0.right" timestamp="1589266678112">
       <screen x="68" y="23" width="1852" height="1057" />
     </state>
-    <state width="1808" height="282" key="GridCell.Tab.0.right/68.23.1852.1057@68.23.1852.1057" timestamp="1589261985321" />
+    <state width="1808" height="302" key="GridCell.Tab.0.right/68.23.1852.1057@68.23.1852.1057" timestamp="1589266678112" />
     <state width="1808" height="282" key="GridCell.Tab.0.right/70.23.1850.1057@70.23.1850.1057" timestamp="1589253236776" />
     <state x="995" y="220" width="673" height="673" key="find.popup" timestamp="1589264569064">
       <screen x="68" y="23" width="1852" height="1057" />
