@@ -237,6 +237,7 @@ static void decoder_init(Decoder *d, AVCodecContext *avctx, PacketQueue *queue, 
     d->pkt_serial = -1;
 }
 
+// 解码
 static int decoder_decode_frame(Decoder *d, AVFrame *frame, AVSubtitle *sub) {
     int ret = AVERROR(EAGAIN);
 
@@ -1702,7 +1703,7 @@ static int audio_thread(void *arg)
     if (!frame)
         return AVERROR(ENOMEM);
 
-    do {
+    do {// frame 解码后的帧
         if ((got_frame = decoder_decode_frame(&is->auddec, frame, NULL)) < 0)
             goto the_end;
 
@@ -3437,4 +3438,9 @@ int main(int argc, char **argv)
     /* never returns */
 
     return 0;
+}
+
+void test()
+{
+
 }
