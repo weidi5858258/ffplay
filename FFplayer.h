@@ -50,8 +50,6 @@ extern "C" {
 #endif
 
 
-
-
 #define MAX_QUEUE_SIZE (15 * 1024 * 1024)
 #define MIN_FRAMES 25
 #define EXTERNAL_CLOCK_MIN_FRAMES 2
@@ -106,18 +104,24 @@ typedef struct MyAVPacketList {
 
 typedef struct PacketQueue {
     MyAVPacketList *first_pkt, *last_pkt;
+    // packet_queue_init(0)
     int nb_packets;
+    // init(0)
     int size;
+    // init(0)
     int64_t duration;
+    // init(1)
     int abort_request;
+    // init(0)
     int serial;
     SDL_mutex *mutex;
     SDL_cond *cond;
 } PacketQueue;
 
+// 保存解码帧的个数
 #define VIDEO_PICTURE_QUEUE_SIZE 3
-#define SUBPICTURE_QUEUE_SIZE 16
 #define SAMPLE_QUEUE_SIZE 9
+#define SUBPICTURE_QUEUE_SIZE 16
 #define FRAME_QUEUE_SIZE FFMAX(SAMPLE_QUEUE_SIZE, FFMAX(VIDEO_PICTURE_QUEUE_SIZE, SUBPICTURE_QUEUE_SIZE))
 
 typedef struct AudioParams {
@@ -133,8 +137,10 @@ typedef struct Clock {
     double pts;           /* clock base */
     double pts_drift;     /* clock base minus time at which we updated the clock */
     double last_updated;
+    // init(1.0)
     double speed;
     int serial;           /* clock is based on a packet with this serial */
+    // init(0)
     int paused;
     int *queue_serial;    /* pointer to the current packet queue serial, used for obsolete clock detection */
 } Clock;
@@ -155,12 +161,15 @@ typedef struct Frame {
     int flip_v;
 } Frame;
 
+// 存放解码帧
 typedef struct FrameQueue {
     Frame queue[FRAME_QUEUE_SIZE];
     int rindex;
     int windex;
     int size;
+    // video(3) audio(9) subtitle(16)
     int max_size;
+    // video(1) audio(1) subtitle(0)
     int keep_last;
     int rindex_shown;
     SDL_mutex *mutex;
@@ -192,6 +201,7 @@ typedef struct Decoder {
 typedef struct VideoState {
     SDL_Thread *read_tid;
     AVInputFormat *iformat;
+    // 是否强制停止(1停止0运行)
     int abort_request;
     int force_refresh;
     int paused;
@@ -218,10 +228,11 @@ typedef struct VideoState {
     Decoder subdec;
 
     int audio_stream;
-
-    int av_sync_type;
+    // init(以audio为基准进行音视频同步)
+    int av_sync_type;// AV_SYNC_AUDIO_MASTER
 
     double audio_clock;
+    // stream_open(-1)
     int audio_clock_serial;
     double audio_diff_cum; /* used for AV difference average computation */
     double audio_diff_avg_coef;
@@ -236,7 +247,9 @@ typedef struct VideoState {
     unsigned int audio_buf1_size;
     int audio_buf_index; /* in bytes */
     int audio_write_buf_size;
+    // 音量大小
     int audio_volume;
+    // init(0)
     int muted;
     struct AudioParams audio_src;
 #if CONFIG_AVFILTER
@@ -277,7 +290,7 @@ typedef struct VideoState {
     struct SwsContext *sub_convert_ctx;
     int eof;
 
-    char *filename;
+    char *filename;// 需要播放的视频路径
     int width, height, xleft, ytop;
     int step;
 
@@ -299,16 +312,16 @@ typedef struct VideoState {
 static AVInputFormat *file_iformat;
 static const char *input_filename;
 static const char *window_title;
-static int default_width  = 640;
+static int default_width = 640;
 static int default_height = 480;
-static int screen_width  = 0;
+static int screen_width = 0;
 static int screen_height = 0;
 static int screen_left = SDL_WINDOWPOS_CENTERED;
 static int screen_top = SDL_WINDOWPOS_CENTERED;
 static int audio_disable;
 static int video_disable;
 static int subtitle_disable;
-static const char* wanted_stream_spec[AVMEDIA_TYPE_NB] = {0};
+static const char *wanted_stream_spec[AVMEDIA_TYPE_NB] = {0};
 static int seek_by_bytes = -1;
 static float seek_interval = 10;
 static int display_disable;
@@ -317,6 +330,7 @@ static int alwaysontop;
 static int startup_volume = 100;
 static int show_status = -1;
 static int av_sync_type = AV_SYNC_AUDIO_MASTER;
+// 开始播放时需要seek到的那个时间点
 static int64_t start_time = AV_NOPTS_VALUE;
 static int64_t duration = AV_NOPTS_VALUE;
 static int fast = 0;
@@ -362,26 +376,26 @@ static const struct TextureFormatEntry {
     enum AVPixelFormat format;
     int texture_fmt;
 } sdl_texture_format_map[] = {
-        { AV_PIX_FMT_RGB8,           SDL_PIXELFORMAT_RGB332 },
-        { AV_PIX_FMT_RGB444,         SDL_PIXELFORMAT_RGB444 },
-        { AV_PIX_FMT_RGB555,         SDL_PIXELFORMAT_RGB555 },
-        { AV_PIX_FMT_BGR555,         SDL_PIXELFORMAT_BGR555 },
-        { AV_PIX_FMT_RGB565,         SDL_PIXELFORMAT_RGB565 },
-        { AV_PIX_FMT_BGR565,         SDL_PIXELFORMAT_BGR565 },
-        { AV_PIX_FMT_RGB24,          SDL_PIXELFORMAT_RGB24 },
-        { AV_PIX_FMT_BGR24,          SDL_PIXELFORMAT_BGR24 },
-        { AV_PIX_FMT_0RGB32,         SDL_PIXELFORMAT_RGB888 },
-        { AV_PIX_FMT_0BGR32,         SDL_PIXELFORMAT_BGR888 },
-        { AV_PIX_FMT_NE(RGB0, 0BGR), SDL_PIXELFORMAT_RGBX8888 },
-        { AV_PIX_FMT_NE(BGR0, 0RGB), SDL_PIXELFORMAT_BGRX8888 },
-        { AV_PIX_FMT_RGB32,          SDL_PIXELFORMAT_ARGB8888 },
-        { AV_PIX_FMT_RGB32_1,        SDL_PIXELFORMAT_RGBA8888 },
-        { AV_PIX_FMT_BGR32,          SDL_PIXELFORMAT_ABGR8888 },
-        { AV_PIX_FMT_BGR32_1,        SDL_PIXELFORMAT_BGRA8888 },
-        { AV_PIX_FMT_YUV420P,        SDL_PIXELFORMAT_IYUV },
-        { AV_PIX_FMT_YUYV422,        SDL_PIXELFORMAT_YUY2 },
-        { AV_PIX_FMT_UYVY422,        SDL_PIXELFORMAT_UYVY },
-        { AV_PIX_FMT_NONE,           SDL_PIXELFORMAT_UNKNOWN },
+        {AV_PIX_FMT_RGB8,           SDL_PIXELFORMAT_RGB332},
+        {AV_PIX_FMT_RGB444,         SDL_PIXELFORMAT_RGB444},
+        {AV_PIX_FMT_RGB555,         SDL_PIXELFORMAT_RGB555},
+        {AV_PIX_FMT_BGR555,         SDL_PIXELFORMAT_BGR555},
+        {AV_PIX_FMT_RGB565,         SDL_PIXELFORMAT_RGB565},
+        {AV_PIX_FMT_BGR565,         SDL_PIXELFORMAT_BGR565},
+        {AV_PIX_FMT_RGB24,          SDL_PIXELFORMAT_RGB24},
+        {AV_PIX_FMT_BGR24,          SDL_PIXELFORMAT_BGR24},
+        {AV_PIX_FMT_0RGB32,         SDL_PIXELFORMAT_RGB888},
+        {AV_PIX_FMT_0BGR32,         SDL_PIXELFORMAT_BGR888},
+        {AV_PIX_FMT_NE(RGB0, 0BGR), SDL_PIXELFORMAT_RGBX8888},
+        {AV_PIX_FMT_NE(BGR0, 0RGB), SDL_PIXELFORMAT_BGRX8888},
+        {AV_PIX_FMT_RGB32,          SDL_PIXELFORMAT_ARGB8888},
+        {AV_PIX_FMT_RGB32_1,        SDL_PIXELFORMAT_RGBA8888},
+        {AV_PIX_FMT_BGR32,          SDL_PIXELFORMAT_ABGR8888},
+        {AV_PIX_FMT_BGR32_1,        SDL_PIXELFORMAT_BGRA8888},
+        {AV_PIX_FMT_YUV420P,        SDL_PIXELFORMAT_IYUV},
+        {AV_PIX_FMT_YUYV422,        SDL_PIXELFORMAT_YUY2},
+        {AV_PIX_FMT_UYVY422,        SDL_PIXELFORMAT_UYVY},
+        {AV_PIX_FMT_NONE,           SDL_PIXELFORMAT_UNKNOWN},
 };
 
 

@@ -6,10 +6,6 @@
 
 #IncludeRegexTransform: 
 
-/Users/alexander/mydev/workspace_github/audio_video/ffmpeg_code/ffplay/FFplayer.cpp
-FFplayer.h
-/Users/alexander/mydev/workspace_github/audio_video/ffmpeg_code/ffplay/FFplayer.h
-
 /Users/alexander/mydev/workspace_github/audio_video/ffmpeg_code/ffplay/FFplayer.h
 config.h
 /Users/alexander/mydev/workspace_github/audio_video/ffmpeg_code/ffplay/config.h
