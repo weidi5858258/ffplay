@@ -1097,6 +1097,7 @@ static void check_external_clock_speed(VideoState *is) {
 
 /* seek in the stream */
 static void stream_seek(VideoState *is, int64_t pos, int64_t rel, int seek_by_bytes) {
+    printf("stream_seek() pos = %ld rel = %ld seek_by_bytes = %d\n", (long) pos, (long) rel, seek_by_bytes);
     if (!is->seek_req) {
         is->seek_pos = pos;
         is->seek_rel = rel;
@@ -1741,8 +1742,7 @@ static int audio_thread(void *arg) {
 
 static int decoder_start(Decoder *d, int (*fn)(void *), const char *thread_name, void *arg) {
     packet_queue_start(d->queue);
-    d->decoder_tid = SDL_CreateThread(fn, thread_name, arg);
-    if (!d->decoder_tid) {
+    if (!(d->decoder_tid = SDL_CreateThread(fn, thread_name, arg))) {
         av_log(NULL, AV_LOG_ERROR, "SDL_CreateThread(): %s\n", SDL_GetError());
         return AVERROR(ENOMEM);
     }
@@ -2224,6 +2224,10 @@ static int stream_component_open(VideoState *is, int stream_index) {
     codec = avcodec_find_decoder(avctx->codec_id);
 
     switch (avctx->codec_type) {
+        case AVMEDIA_TYPE_VIDEO   :
+            is->last_video_stream = stream_index;
+            forced_codec_name = video_codec_name;
+            break;
         case AVMEDIA_TYPE_AUDIO   :
             is->last_audio_stream = stream_index;
             forced_codec_name = audio_codec_name;
@@ -2231,10 +2235,6 @@ static int stream_component_open(VideoState *is, int stream_index) {
         case AVMEDIA_TYPE_SUBTITLE:
             is->last_subtitle_stream = stream_index;
             forced_codec_name = subtitle_codec_name;
-            break;
-        case AVMEDIA_TYPE_VIDEO   :
-            is->last_video_stream = stream_index;
-            forced_codec_name = video_codec_name;
             break;
         default:
             break;
@@ -2284,6 +2284,15 @@ static int stream_component_open(VideoState *is, int stream_index) {
     is->eof = 0;
     ic->streams[stream_index]->discard = AVDISCARD_DEFAULT;
     switch (avctx->codec_type) {
+        case AVMEDIA_TYPE_VIDEO:
+            is->video_stream = stream_index;
+            is->video_st = ic->streams[stream_index];
+
+            decoder_init(&is->viddec, avctx, &is->videoq, is->continue_read_thread);
+            if ((ret = decoder_start(&is->viddec, video_thread, "video_decoder", is)) < 0)
+                goto out;
+            is->queue_attachments_req = 1;
+            break;
         case AVMEDIA_TYPE_AUDIO:
 #if CONFIG_AVFILTER
         {
@@ -2333,15 +2342,6 @@ static int stream_component_open(VideoState *is, int stream_index) {
             if ((ret = decoder_start(&is->auddec, audio_thread, "audio_decoder", is)) < 0)
                 goto out;
             SDL_PauseAudioDevice(audio_dev, 0);
-            break;
-        case AVMEDIA_TYPE_VIDEO:
-            is->video_stream = stream_index;
-            is->video_st = ic->streams[stream_index];
-
-            decoder_init(&is->viddec, avctx, &is->videoq, is->continue_read_thread);
-            if ((ret = decoder_start(&is->viddec, video_thread, "video_decoder", is)) < 0)
-                goto out;
-            is->queue_attachments_req = 1;
             break;
         case AVMEDIA_TYPE_SUBTITLE:
             is->subtitle_stream = stream_index;
@@ -3071,7 +3071,11 @@ static void event_loop(VideoState *cur_stream) {
                             else
                                 incr *= 180000.0;
                             pos += incr;
-                            stream_seek(cur_stream, pos, incr, 1);
+                            printf("event_loop()  pos = %lf incr = %lf\n", pos, incr);
+                            stream_seek(cur_stream,
+                                        pos,
+                                        incr,
+                                        1);
                         } else {
                             pos = get_master_clock(cur_stream);
                             if (isnan(pos))
@@ -3080,7 +3084,11 @@ static void event_loop(VideoState *cur_stream) {
                             if (cur_stream->ic->start_time != AV_NOPTS_VALUE &&
                                 pos < cur_stream->ic->start_time / (double) AV_TIME_BASE)
                                 pos = cur_stream->ic->start_time / (double) AV_TIME_BASE;
-                            stream_seek(cur_stream, (int64_t) (pos * AV_TIME_BASE), (int64_t) (incr * AV_TIME_BASE), 0);
+                            printf("event_loop()  pos = %lf incr = %lf\n", pos, incr);
+                            stream_seek(cur_stream,
+                                        (int64_t) (pos * AV_TIME_BASE),
+                                        (int64_t) (incr * AV_TIME_BASE),
+                                        0);
                         }
                         break;
                     default:
@@ -3382,34 +3390,6 @@ int main(int argc, char **argv) {
     }
     printf("------------------------------------------\n");
 
-//    VideoState *is;
-//    init_dynload();
-//    av_log_set_flags(AV_LOG_SKIP_REPEATED);
-//    parse_loglevel(argc, argv, options);
-//    /* register all codecs, demux and protocols */
-//#if CONFIG_AVDEVICE
-//    avdevice_register_all();
-//#endif
-//    avformat_network_init();
-//    init_opts();
-//    signal(SIGINT, sigterm_handler); /* Interrupt (ANSI).    */
-//    signal(SIGTERM, sigterm_handler); /* Termination (ANSI).  */
-//    show_banner(argc, argv, options);
-//    parse_options(NULL, argc, argv, options, opt_input_file);
-//    input_filename = "https://zb3.qhqsnedu.com/live/chingyinglam/playlist.m3u8";
-//    input_filename = "https://meiju10.qhqsnedu.com/20200215/K9dFB7dW/3000kb/hls/index.m3u8";
-//    input_filename = "/Users/alexander/Downloads/千千阙歌.mp4";
-//    input_filename = "/Users/alexander/Downloads/video.mp4";
-//    if (!input_filename) {
-//        show_usage();
-//        av_log(NULL, AV_LOG_FATAL, "An input file must be specified\n");
-//        av_log(NULL, AV_LOG_FATAL,
-//               "Use -h to get full help or, even better, run 'man %s'\n", program_name);
-//        exit(1);
-//    }
-//    av_init_packet(&flush_pkt);
-//    flush_pkt.data = (uint8_t *) &flush_pkt;
-
     printf("main()  display_disable = %d\n", display_disable);
     printf("main()    audio_disable = %d\n", audio_disable);
     printf("main()    video_disable = %d\n", video_disable);
@@ -3488,12 +3468,14 @@ int main(int argc, char **argv) {
     signal(SIGINT, sigterm_handler); /* Interrupt (ANSI).    */
     signal(SIGTERM, sigterm_handler); /* Termination (ANSI).  */
 
+    start_time = 1800;
+
     input_filename = "https://zb3.qhqsnedu.com/live/chingyinglam/playlist.m3u8";
     input_filename = "https://meiju10.qhqsnedu.com/20200215/K9dFB7dW/3000kb/hls/index.m3u8";
     input_filename = "/Users/alexander/Downloads/千千阙歌.mp4";
     input_filename = "/Users/alexander/Downloads/video.mp4";
-    input_filename = "/Users/alexander/Downloads/小品-吃面.mp4";
     input_filename = "https://fangao.qhqsnedu.com/video/20190901/89cc34d4345d4a989ebebccc0ba8c1e8/cloudv-transfer/5555555526nso9o25556p16530pp8o3r_9774f5a8e6d5485f86c8f722492933b2_0_3.m3u8";
+    input_filename = "/Users/alexander/Downloads/小品-吃面.mp4";
     if (!input_filename) {
         show_usage();
         av_log(NULL, AV_LOG_FATAL, "An input file must be specified\n");
