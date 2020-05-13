@@ -3493,6 +3493,7 @@ int main(int argc, char **argv) {
     input_filename = "/Users/alexander/Downloads/千千阙歌.mp4";
     input_filename = "/Users/alexander/Downloads/video.mp4";
     input_filename = "/Users/alexander/Downloads/小品-吃面.mp4";
+    input_filename = "https://fangao.qhqsnedu.com/video/20190901/89cc34d4345d4a989ebebccc0ba8c1e8/cloudv-transfer/5555555526nso9o25556p16530pp8o3r_9774f5a8e6d5485f86c8f722492933b2_0_3.m3u8";
     if (!input_filename) {
         show_usage();
         av_log(NULL, AV_LOG_FATAL, "An input file must be specified\n");
