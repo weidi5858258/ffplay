@@ -51,7 +51,9 @@ extern "C" {
 
 
 #define MAX_QUEUE_SIZE (15 * 1024 * 1024)
+//#define MAX_QUEUE_SIZE (1024 * 1024 * 1024)
 #define MIN_FRAMES 25
+//#define MIN_FRAMES 10000
 #define EXTERNAL_CLOCK_MIN_FRAMES 2
 #define EXTERNAL_CLOCK_MAX_FRAMES 10
 
@@ -96,6 +98,7 @@ extern "C" {
 
 static unsigned sws_flags = SWS_BICUBIC;
 
+// 就是一个节点(node)
 typedef struct MyAVPacketList {
     AVPacket pkt;
     struct MyAVPacketList *next;
@@ -103,14 +106,15 @@ typedef struct MyAVPacketList {
 } MyAVPacketList;
 
 typedef struct PacketQueue {
+    // first_pkt是flush_pkt,在packet_queue_start中实现
     MyAVPacketList *first_pkt, *last_pkt;
-    // packet_queue_init(0)
+    // packet_queue_init(0) MyAVPacketList的个数
     int nb_packets;
     // init(0)
     int size;
     // init(0)
     int64_t duration;
-    // init(1)
+    // packet_queue_init(1) packet_queue_start(0)
     int abort_request;
     // init(0)
     int serial;
@@ -190,6 +194,7 @@ typedef struct Decoder {
     int pkt_serial;
     int finished;
     int packet_pending;
+    // 指向is->continue_read_thread
     SDL_cond *empty_queue_cond;
     int64_t start_pts;
     AVRational start_pts_tb;
@@ -238,6 +243,7 @@ typedef struct VideoState {
     double audio_diff_avg_coef;
     double audio_diff_threshold;
     int audio_diff_avg_count;
+    // stream_component_open
     AVStream *audio_st;
     PacketQueue audioq;
     int audio_hw_buf_size;
@@ -276,6 +282,7 @@ typedef struct VideoState {
     SDL_Texture *vid_texture;
 
     int subtitle_stream;
+    // stream_component_open
     AVStream *subtitle_st;
     PacketQueue subtitleq;
 
@@ -283,14 +290,17 @@ typedef struct VideoState {
     double frame_last_returned_time;
     double frame_last_filter_delay;
     int video_stream;
+    // stream_component_open
     AVStream *video_st;
     PacketQueue videoq;
     double max_frame_duration;      // maximum duration of a frame - above this, we consider the jump a timestamp discontinuity
     struct SwsContext *img_convert_ctx;
     struct SwsContext *sub_convert_ctx;
+    // stream_component_open(0)
     int eof;
 
-    char *filename;// 需要播放的视频路径
+    // 媒体播放路径
+    char *filename;
     int width, height, xleft, ytop;
     int step;
 
@@ -303,10 +313,14 @@ typedef struct VideoState {
     AVFilterGraph *agraph;              // audio filter graph
 #endif
 
+    // stream_component_open
+    // 其值等同于video_stream, audio_stream, subtitle_stream
     int last_video_stream, last_audio_stream, last_subtitle_stream;
-
+    // stream_open
     SDL_cond *continue_read_thread;
 } VideoState;
+
+static VideoState *video_state;
 
 /* options specified by the user */
 static AVInputFormat *file_iformat;
@@ -344,9 +358,9 @@ static int loop = 1;
 static int framedrop = -1;
 static int infinite_buffer = -1;
 static enum VideoState::ShowMode show_mode = VideoState::SHOW_MODE_NONE;
+static const char *video_codec_name;
 static const char *audio_codec_name;
 static const char *subtitle_codec_name;
-static const char *video_codec_name;
 //double rdftspeed = 0.02;
 static int64_t cursor_last_shown;
 static int cursor_hidden = 0;

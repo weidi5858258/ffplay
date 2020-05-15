@@ -27,13 +27,16 @@
  */
 
 #include <stdint.h>
+
 #ifdef __cplusplus
 extern "C" {
 #endif
+
 #include "libavutil/common.h"
 #include "libavutil/dict.h"
 #include "libavutil/log.h"
 #include "libavformat/version.h"
+
 #ifdef __cplusplus
 }
 #endif

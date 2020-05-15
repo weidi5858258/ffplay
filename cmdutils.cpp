@@ -1124,10 +1124,11 @@ static int warned_cfg = 0;
 #define SHOW_CONFIG   4
 #define SHOW_COPYRIGHT 8
 
+//  下面的"& 0"是我加的
 #define PRINT_LIB_INFO(libname, LIBNAME, flags, level)                  \
     if (CONFIG_##LIBNAME) {                                             \
         const char *indent = flags & INDENT? "  " : "";                 \
-        if (flags & SHOW_VERSION) {                                     \
+        if (flags & SHOW_VERSION & 0) {                                     \
             unsigned int version = libname##_version();                 \
             av_log(NULL, level,                                         \
                    "%slib%-11s %2d.%3d.%3d / %2d.%3d.%3d\n",            \
@@ -1138,7 +1139,7 @@ static int warned_cfg = 0;
                    AV_VERSION_MAJOR(version), AV_VERSION_MINOR(version),\
                    AV_VERSION_MICRO(version));                          \
         }                                                               \
-        if (flags & SHOW_CONFIG) {                                      \
+        if (flags & SHOW_CONFIG & 0) {                                      \
             const char *cfg = libname##_configuration();                \
             if (strcmp(FFMPEG_CONFIGURATION, cfg)) {                    \
                 if (!warned_cfg) {                                      \
@@ -1168,7 +1169,7 @@ static void print_all_libs_info(int flags, int level)
 
 static void print_program_info(int flags, int level)
 {
-    const char *indent = flags & INDENT? "  " : "";
+    /*const char *indent = flags & INDENT? "  " : "";
 
     av_log(NULL, level, "%s version " FFMPEG_VERSION, program_name);
     if (flags & SHOW_COPYRIGHT)
@@ -1177,7 +1178,7 @@ static void print_program_info(int flags, int level)
     av_log(NULL, level, "\n");
     av_log(NULL, level, "%sbuilt with %s\n", indent, CC_IDENT);
 
-    av_log(NULL, level, "%sconfiguration: " FFMPEG_CONFIGURATION "\n", indent);
+    av_log(NULL, level, "%sconfiguration: " FFMPEG_CONFIGURATION "\n", indent);*/
 }
 
 static void print_buildconf(int flags, int level)
