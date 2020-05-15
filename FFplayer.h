@@ -8,12 +8,14 @@
 #ifdef __cplusplus
 extern "C" {
 #endif
+
 #include "config.h"
 #include <inttypes.h>
 #include <math.h>
 #include <limits.h>
 #include <signal.h>
 #include <stdint.h>
+#include <assert.h>
 
 #include "libavutil/avstring.h"
 #include "libavutil/eval.h"
@@ -44,7 +46,6 @@ extern "C" {
 
 #include "cmdutils.h"
 
-#include <assert.h>
 #ifdef __cplusplus
 }
 #endif

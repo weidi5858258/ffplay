@@ -2236,6 +2236,13 @@ static int stream_component_open(VideoState *is, int stream_index) {
     int ret = 0;
     int stream_lowres = lowres;
 
+    // audio
+    // wanted_sample_fmt决定wanted_audio_format
+    int sample_rate, wanted_sample_rate, nb_channels, wanted_channels, wanted_audio_format = 2;
+    int64_t channel_layout, wanted_channel_layout = AV_CH_LAYOUT_STEREO;
+    AVSampleFormat sample_fmt, wanted_sample_fmt = AV_SAMPLE_FMT_S16;
+    SwrContext *swrContext = nullptr;
+
     avctx = avcodec_alloc_context3(NULL);
     if (!avctx)
         return AVERROR(ENOMEM);
@@ -2317,39 +2324,28 @@ static int stream_component_open(VideoState *is, int stream_index) {
             is->queue_attachments_req = 1;
             break;
         case AVMEDIA_TYPE_AUDIO:
-            int sample_rate, nb_channels, sample_fmt;
-            int64_t channel_layout;
 #if CONFIG_AVFILTER
-            {
-                AVFilterContext *sink;
+        {
+            AVFilterContext *sink;
 
-                is->audio_filter_src.freq = avctx->sample_rate;
-                is->audio_filter_src.channels = avctx->channels;
-                is->audio_filter_src.channel_layout = get_valid_channel_layout(avctx->channel_layout, avctx->channels);
-                is->audio_filter_src.fmt = avctx->sample_fmt;
-                if ((ret = configure_audio_filters(is, afilters, 0)) < 0)
-                    goto fail;
-                sink = is->out_audio_filter;
-                sample_rate = av_buffersink_get_sample_rate(sink);
-                nb_channels = av_buffersink_get_channels(sink);
-                sample_fmt = av_buffersink_get_format(sink);
-                channel_layout = av_buffersink_get_channel_layout(sink);
-            }
+            is->audio_filter_src.freq = avctx->sample_rate;
+            is->audio_filter_src.channels = avctx->channels;
+            is->audio_filter_src.channel_layout = get_valid_channel_layout(avctx->channel_layout, avctx->channels);
+            is->audio_filter_src.fmt = avctx->sample_fmt;
+            if ((ret = configure_audio_filters(is, afilters, 0)) < 0)
+                goto fail;
+            sink = is->out_audio_filter;
+            sample_rate = av_buffersink_get_sample_rate(sink);
+            nb_channels = av_buffersink_get_channels(sink);
+            sample_fmt = static_cast<AVSampleFormat>(av_buffersink_get_format(sink));
+            channel_layout = av_buffersink_get_channel_layout(sink);
+        }
 #else
         sample_rate    = avctx->sample_rate;
         nb_channels    = avctx->channels;
         sample_fmt     = avctx->sample_fmt;
         channel_layout = avctx->channel_layout;
 #endif
-            // sample_rate channels sample_fmt frame_size channel_layout
-            printf("stream_component_open() sample_rate1 = %d\n", sample_rate);
-            printf("stream_component_open() sample_rate2 = %d\n", avctx->sample_rate);
-            printf("stream_component_open() channels1 = %d\n", nb_channels);
-            printf("stream_component_open() channels2 = %d\n", avctx->channels);
-            printf("stream_component_open() sample_fmt1 = %d\n", sample_fmt);
-            printf("stream_component_open() sample_fmt2 = %d\n", avctx->sample_fmt);
-            printf("stream_component_open() channel_layout1 = %d\n", channel_layout);
-            printf("stream_component_open() channel_layout2 = %d\n", avctx->channel_layout);
 
             /* prepare audio output */
             if ((ret = audio_open(is, channel_layout, nb_channels, sample_rate, &is->audio_tgt)) < 0)
@@ -2379,6 +2375,50 @@ static int stream_component_open(VideoState *is, int stream_index) {
             /*if ((ret = decoder_start(&is->auddec, audio_thread, "audio_decoder", is)) < 0)
                 goto out;
             SDL_PauseAudioDevice(audio_dev, 0);*/
+
+            // android
+            wanted_sample_rate = sample_rate;
+            wanted_channels = av_get_channel_layout_nb_channels(wanted_channel_layout);
+
+            printf("stream_component_open()           sample_rate = %d\n", sample_rate);
+            printf("stream_component_open()    avctx->sample_rate = %d\n", avctx->sample_rate);
+            printf("stream_component_open()    wanted_sample_rate = %d\n", wanted_sample_rate);
+            printf("stream_component_open()              channels = %d\n", nb_channels);
+            printf("stream_component_open()       avctx->channels = %d\n", avctx->channels);
+            printf("stream_component_open()       wanted_channels = %d\n", wanted_channels);
+            printf("stream_component_open()            sample_fmt = %d\n", sample_fmt);
+            printf("stream_component_open()     avctx->sample_fmt = %d\n", avctx->sample_fmt);
+            printf("stream_component_open()     wanted_sample_fmt = %d\n", wanted_sample_fmt);
+            printf("stream_component_open()        channel_layout = %d\n", channel_layout);
+            printf("stream_component_open() avctx->channel_layout = %d\n", avctx->channel_layout);
+            printf("stream_component_open() wanted_channel_layout = %d\n", wanted_channel_layout);
+
+            swrContext = swr_alloc();
+            swr_alloc_set_opts(swrContext,
+                               wanted_channel_layout,
+                               wanted_sample_fmt,
+                               wanted_sample_rate,
+                               channel_layout,
+                               static_cast<AVSampleFormat>(sample_fmt),// avctx->sample_fmt
+                               sample_rate,
+                               0, NULL);
+            if (!swrContext) {
+                printf("stream_component_open() swrContext is NULL\n");
+                goto fail;
+            } else {
+                ret = swr_init(swrContext);
+                if (ret != 0) {
+                    printf("stream_component_open() swrContext swr_init failed\n");
+                    goto fail;
+                } else {
+                    printf("stream_component_open() swrContext swr_init success\n");
+                }
+            }
+            if (swrContext) {
+                swr_free(&swrContext);
+                swrContext = nullptr;
+            }
+            //createAudioTrack(wanted_sample_rate, wanted_channels, audioFormat);
             break;
         case AVMEDIA_TYPE_SUBTITLE:
             is->subtitle_stream = stream_index;
@@ -2540,7 +2580,7 @@ static int read_thread2(void *arg) {
              (stream_has_enough_packets(is->audio_st, is->audio_stream, &is->audioq) &&
               stream_has_enough_packets(is->video_st, is->video_stream, &is->videoq) &&
               stream_has_enough_packets(is->subtitle_st, is->subtitle_stream, &is->subtitleq)))) {
-            printf("read_thread2() SDL_CondWaitTimeout(10)\n");
+            //printf("read_thread2() SDL_CondWaitTimeout(10)\n");
             /* wait 10 ms */
             SDL_LockMutex(wait_mutex);
             SDL_CondWaitTimeout(is->continue_read_thread, wait_mutex, 10);
