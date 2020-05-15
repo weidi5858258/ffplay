@@ -97,6 +97,9 @@ extern "C" {
 
 #define USE_ONEPASS_SUBTITLE_RENDER 1
 
+//#define OS_ANDROID
+#define MAX_AUDIO_FRAME_SIZE 19200
+
 static unsigned sws_flags = SWS_BICUBIC;
 
 // 就是一个节点(node)
@@ -207,7 +210,7 @@ typedef struct Decoder {
 typedef struct VideoState {
     SDL_Thread *read_tid;
     AVInputFormat *iformat;
-    // 是否强制停止(1停止0运行)
+    // 是否强制停止(1停止0运行) stream_close(1) init(0)
     int abort_request;
     int force_refresh;
     int paused;
@@ -319,6 +322,17 @@ typedef struct VideoState {
     int last_video_stream, last_audio_stream, last_subtitle_stream;
     // stream_open
     SDL_cond *continue_read_thread;
+
+#ifdef OS_ANDROID
+    // audio
+    unsigned char *audioOutBuffer = nullptr;
+    size_t audioOutBufferSize = 0;
+    // video
+    unsigned char *videoOutBuffer = nullptr;
+    size_t videoOutBufferSize = 0;
+    AVFrame *rgbAVFrame = nullptr;
+#endif
+
 } VideoState;
 
 static VideoState *video_state;
