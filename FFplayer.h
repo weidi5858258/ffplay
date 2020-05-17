@@ -53,8 +53,8 @@ extern "C" {
 
 #define MAX_QUEUE_SIZE (15 * 1024 * 1024)
 //#define MAX_QUEUE_SIZE (1024 * 1024 * 1024)
-#define MIN_FRAMES 25
-//#define MIN_FRAMES 10000
+//#define MIN_FRAMES 25
+#define MIN_FRAMES 10000
 #define EXTERNAL_CLOCK_MIN_FRAMES 2
 #define EXTERNAL_CLOCK_MAX_FRAMES 10
 
@@ -195,6 +195,7 @@ typedef struct Decoder {
     AVPacket pkt;
     PacketQueue *queue;
     AVCodecContext *avctx;
+    // decoder_init(-1)
     int pkt_serial;
     int finished;
     int packet_pending;
@@ -208,37 +209,49 @@ typedef struct Decoder {
 } Decoder;
 
 typedef struct VideoState {
-    SDL_Thread *read_tid;
+    AVFormatContext *ic;
     AVInputFormat *iformat;
-    // 是否强制停止(1停止0运行) stream_close(1) init(0)
+    // 是否强制停止(0运行1停止) init(0) stream_close(1)
     int abort_request;
     int force_refresh;
     int paused;
     int last_paused;
     int queue_attachments_req;
+    // 需要seek时为1,否则为0
     int seek_req;
     int seek_flags;
     int64_t seek_pos;
     int64_t seek_rel;
     int read_pause_return;
-    AVFormatContext *ic;
     int realtime;
+    // stream_component_open(0)
+    int eof;
+    // init(以audio为基准进行音视频同步)
+    int av_sync_type;// AV_SYNC_AUDIO_MASTER
 
-    Clock audclk;
     Clock vidclk;
+    Clock audclk;
     Clock extclk;
 
     FrameQueue pictq;
-    FrameQueue subpq;
     FrameQueue sampq;
+    FrameQueue subpq;
 
-    Decoder auddec;
+    PacketQueue videoq;
+    PacketQueue audioq;
+    PacketQueue subtitleq;
+
     Decoder viddec;
+    Decoder auddec;
     Decoder subdec;
 
-    int audio_stream;
-    // init(以audio为基准进行音视频同步)
-    int av_sync_type;// AV_SYNC_AUDIO_MASTER
+    // stream_component_open
+    // 对应的值都是相等的
+    int video_stream, audio_stream, subtitle_stream;
+    int last_video_stream, last_audio_stream, last_subtitle_stream;
+    // stream_component_open
+    AVStream *video_st, *audio_st, *subtitle_st;
+
 
     double audio_clock;
     // stream_open(-1)
@@ -247,9 +260,6 @@ typedef struct VideoState {
     double audio_diff_avg_coef;
     double audio_diff_threshold;
     int audio_diff_avg_count;
-    // stream_component_open
-    AVStream *audio_st;
-    PacketQueue audioq;
     int audio_hw_buf_size;
     uint8_t *audio_buf;
     uint8_t *audio_buf1;
@@ -270,9 +280,7 @@ typedef struct VideoState {
     int frame_drops_early;
     int frame_drops_late;
 
-    enum ShowMode {
-        SHOW_MODE_NONE = -1, SHOW_MODE_VIDEO = 0, SHOW_MODE_WAVES, SHOW_MODE_RDFT, SHOW_MODE_NB
-    } show_mode;
+
     int16_t sample_array[SAMPLE_ARRAY_SIZE];
     int sample_array_index;
     int last_i_start;
@@ -281,27 +289,13 @@ typedef struct VideoState {
     FFTSample *rdft_data;
     int xpos;
     double last_vis_time;
-    SDL_Texture *vis_texture;
-    SDL_Texture *sub_texture;
-    SDL_Texture *vid_texture;
-
-    int subtitle_stream;
-    // stream_component_open
-    AVStream *subtitle_st;
-    PacketQueue subtitleq;
 
     double frame_timer;
     double frame_last_returned_time;
     double frame_last_filter_delay;
-    int video_stream;
-    // stream_component_open
-    AVStream *video_st;
-    PacketQueue videoq;
     double max_frame_duration;      // maximum duration of a frame - above this, we consider the jump a timestamp discontinuity
     struct SwsContext *img_convert_ctx;
     struct SwsContext *sub_convert_ctx;
-    // stream_component_open(0)
-    int eof;
 
     // 媒体播放路径
     char *filename;
@@ -317,12 +311,6 @@ typedef struct VideoState {
     AVFilterGraph *agraph;              // audio filter graph
 #endif
 
-    // stream_component_open
-    // 其值等同于video_stream, audio_stream, subtitle_stream
-    int last_video_stream, last_audio_stream, last_subtitle_stream;
-    // stream_open
-    SDL_cond *continue_read_thread;
-
 #ifdef OS_ANDROID
     // audio
     unsigned char *audioOutBuffer = nullptr;
@@ -332,6 +320,18 @@ typedef struct VideoState {
     size_t videoOutBufferSize = 0;
     AVFrame *rgbAVFrame = nullptr;
 #endif
+
+    enum ShowMode {
+        SHOW_MODE_NONE = -1, SHOW_MODE_VIDEO = 0, SHOW_MODE_WAVES, SHOW_MODE_RDFT, SHOW_MODE_NB
+    } show_mode;
+
+    // SDL
+    SDL_Thread *read_tid;
+    SDL_Texture *vis_texture;
+    SDL_Texture *sub_texture;
+    SDL_Texture *vid_texture;
+    // stream_open
+    SDL_cond *continue_read_thread;
 
 } VideoState;
 
@@ -393,6 +393,11 @@ static int is_full_screen;
 static int64_t audio_callback_time;
 
 static AVPacket flush_pkt;
+
+static long media_duration = -1;
+static int audio_packets = 0;
+static int video_packets = 0;
+static int subtitle_packets = 0;
 
 #define FF_QUIT_EVENT    (SDL_USEREVENT + 2)
 
