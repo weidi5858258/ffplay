@@ -129,9 +129,9 @@ typedef struct PacketQueue {
     // init(0) packet_queue_put_private(++)
     int serial;
     // packet_queue_init
-    SDL_mutex *mutex;
+    pthread_mutex_t pmutex;
     // packet_queue_init
-    SDL_cond *cond;
+    pthread_cond_t pcond;
 } PacketQueue;
 
 // 保存解码帧的个数
@@ -190,9 +190,9 @@ typedef struct FrameQueue {
     int rindex_shown;
     PacketQueue *pktq;
     // frame_queue_init
-    SDL_mutex *mutex;
+    pthread_mutex_t pmutex;
     // frame_queue_init
-    SDL_cond *cond;
+    pthread_cond_t pcond;
 } FrameQueue;
 
 typedef struct Decoder {
@@ -209,7 +209,7 @@ typedef struct Decoder {
     int64_t next_pts;
     AVRational next_pts_tb;
     // decoder_init 指针指向VideoState::continue_read_thread
-    SDL_cond *empty_queue_cond;
+    pthread_cond_t *pempty_queue_cond;
     // decoder_start
     SDL_Thread *decoder_tid;
 } Decoder;
@@ -337,7 +337,7 @@ typedef struct VideoState {
     SDL_Texture *sub_texture;
     SDL_Texture *vid_texture;
     // stream_open
-    SDL_cond *continue_read_thread;
+    pthread_cond_t pcontinue_read_thread;
 
 } VideoState;
 

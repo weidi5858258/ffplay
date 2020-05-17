@@ -39,6 +39,8 @@
  PRINT_LIB_INFO
  */
 
+#include <sys/time.h>
+#include <pthread.h>
 #include "FFplayer.h"
 
 const char program_name[] = "ffplay";
@@ -104,7 +106,7 @@ static int packet_queue_put_private(PacketQueue *q, AVPacket *pkt) {
     q->size += pkt1->pkt.size + sizeof(*pkt1);
     q->duration += pkt1->pkt.duration;
     /* XXX: should duplicate packet data in DV case */
-    SDL_CondSignal(q->cond);
+    pthread_cond_signal(&q->pcond);
 
     return 0;
 }
@@ -112,7 +114,7 @@ static int packet_queue_put_private(PacketQueue *q, AVPacket *pkt) {
 static int packet_queue_put(PacketQueue *q, AVPacket *pkt) {
     int ret;
 
-    SDL_LockMutex(q->mutex);
+    pthread_mutex_lock(&q->pmutex);
     // 停止播放或者申请内存失败时返回-1,否则返回0
     ret = packet_queue_put_private(q, pkt);
     if (seek_by_bytes && pkt != &flush_pkt) {
@@ -133,7 +135,7 @@ static int packet_queue_put(PacketQueue *q, AVPacket *pkt) {
             printf("packet_queue_put() subtitle packets = %d\n", q->nb_packets);
         }
     }
-    SDL_UnlockMutex(q->mutex);
+    pthread_mutex_unlock(&q->pmutex);
 
     if (pkt != &flush_pkt && ret < 0)
         av_packet_unref(pkt);
@@ -154,14 +156,8 @@ static int packet_queue_put_nullpacket(PacketQueue *q, int stream_index) {
 static int packet_queue_init(PacketQueue *q) {
     printf("packet_queue_init() start\n");
     memset(q, 0, sizeof(PacketQueue));
-    if (!(q->mutex = SDL_CreateMutex())) {
-        av_log(NULL, AV_LOG_FATAL, "SDL_CreateMutex(): %s\n", SDL_GetError());
-        return AVERROR(ENOMEM);
-    }
-    if (!(q->cond = SDL_CreateCond())) {
-        av_log(NULL, AV_LOG_FATAL, "SDL_CreateCond(): %s\n", SDL_GetError());
-        return AVERROR(ENOMEM);
-    }
+    q->pmutex = PTHREAD_MUTEX_INITIALIZER;
+    q->pcond = PTHREAD_COND_INITIALIZER;
     q->abort_request = 1;
     printf("packet_queue_init() end\n");
     return 0;
@@ -170,7 +166,7 @@ static int packet_queue_init(PacketQueue *q) {
 static void packet_queue_flush(PacketQueue *q) {
     MyAVPacketList *pkt, *pkt1;
 
-    SDL_LockMutex(q->mutex);
+    pthread_mutex_lock(&q->pmutex);
     for (pkt = q->first_pkt; pkt; pkt = pkt1) {
         pkt1 = pkt->next;
         av_packet_unref(&pkt->pkt);
@@ -181,28 +177,28 @@ static void packet_queue_flush(PacketQueue *q) {
     q->nb_packets = 0;
     q->size = 0;
     q->duration = 0;
-    SDL_UnlockMutex(q->mutex);
+    pthread_mutex_unlock(&q->pmutex);
 }
 
 static void packet_queue_destroy(PacketQueue *q) {
     packet_queue_flush(q);
-    SDL_DestroyMutex(q->mutex);
-    SDL_DestroyCond(q->cond);
+    pthread_mutex_destroy(&q->pmutex);
+    pthread_cond_destroy(&q->pcond);
 }
 
 static void packet_queue_abort(PacketQueue *q) {
-    SDL_LockMutex(q->mutex);
+    pthread_mutex_lock(&q->pmutex);
     q->abort_request = 1;
-    SDL_CondSignal(q->cond);
-    SDL_UnlockMutex(q->mutex);
+    pthread_cond_signal(&q->pcond);
+    pthread_mutex_unlock(&q->pmutex);
 }
 
 static void packet_queue_start(PacketQueue *q) {
     printf("packet_queue_start() start\n");
-    SDL_LockMutex(q->mutex);
+    pthread_mutex_lock(&q->pmutex);
     q->abort_request = 0;
     packet_queue_put_private(q, &flush_pkt);
-    SDL_UnlockMutex(q->mutex);
+    pthread_mutex_unlock(&q->pmutex);
     printf("packet_queue_start() end\n");
 }
 
@@ -211,7 +207,7 @@ static int packet_queue_get(PacketQueue *q, AVPacket *pkt, int block, int *seria
     MyAVPacketList *pkt1;
     int ret;
 
-    SDL_LockMutex(q->mutex);
+    pthread_mutex_lock(&q->pmutex);
 
     for (;;) {
         if (q->abort_request) {
@@ -237,7 +233,7 @@ static int packet_queue_get(PacketQueue *q, AVPacket *pkt, int block, int *seria
             ret = 0;
             break;
         } else {
-            SDL_CondWait(q->cond, q->mutex);
+            pthread_cond_wait(&q->pcond, &q->pmutex);
         }
     }
 
@@ -260,15 +256,15 @@ static int packet_queue_get(PacketQueue *q, AVPacket *pkt, int block, int *seria
         }
     }
 
-    SDL_UnlockMutex(q->mutex);
+    pthread_mutex_unlock(&q->pmutex);
     return ret;
 }
 
-static void decoder_init(Decoder *d, AVCodecContext *avctx, PacketQueue *queue, SDL_cond *empty_queue_cond) {
+static void decoder_init(Decoder *d, AVCodecContext *avctx, PacketQueue *queue, pthread_cond_t *empty_queue_cond) {
     memset(d, 0, sizeof(Decoder));
     d->avctx = avctx;
     d->queue = queue;
-    d->empty_queue_cond = empty_queue_cond;
+    d->pempty_queue_cond = empty_queue_cond;
     d->start_pts = AV_NOPTS_VALUE;
     d->pkt_serial = -1;
 }
@@ -323,7 +319,7 @@ static int decoder_decode_frame(Decoder *d, AVFrame *frame, AVSubtitle *sub) {
 
         do {
             if (d->queue->nb_packets == 0)
-                SDL_CondSignal(d->empty_queue_cond);
+                pthread_cond_signal(d->pempty_queue_cond);
             if (d->packet_pending) {
                 av_packet_move_ref(&pkt, &d->pkt);
                 d->packet_pending = 0;
@@ -379,14 +375,8 @@ static void frame_queue_unref_item(Frame *vp) {
 
 static int frame_queue_init(FrameQueue *f, PacketQueue *pktq, int max_size, int keep_last) {
     memset(f, 0, sizeof(FrameQueue));
-    if (!(f->mutex = SDL_CreateMutex())) {
-        av_log(NULL, AV_LOG_FATAL, "SDL_CreateMutex(): %s\n", SDL_GetError());
-        return AVERROR(ENOMEM);
-    }
-    if (!(f->cond = SDL_CreateCond())) {
-        av_log(NULL, AV_LOG_FATAL, "SDL_CreateCond(): %s\n", SDL_GetError());
-        return AVERROR(ENOMEM);
-    }
+    f->pmutex = PTHREAD_MUTEX_INITIALIZER;
+    f->pcond = PTHREAD_COND_INITIALIZER;
     f->pktq = pktq;
     f->max_size = FFMIN(max_size, FRAME_QUEUE_SIZE);
     f->keep_last = !!keep_last;
@@ -405,14 +395,14 @@ static void frame_queue_destory(FrameQueue *f) {
         frame_queue_unref_item(vp);
         av_frame_free(&vp->frame);
     }
-    SDL_DestroyMutex(f->mutex);
-    SDL_DestroyCond(f->cond);
+    pthread_mutex_destroy(&f->pmutex);
+    pthread_cond_destroy(&f->pcond);
 }
 
 static void frame_queue_signal(FrameQueue *f) {
-    SDL_LockMutex(f->mutex);
-    SDL_CondSignal(f->cond);
-    SDL_UnlockMutex(f->mutex);
+    pthread_mutex_lock(&f->pmutex);
+    pthread_cond_signal(&f->pcond);
+    pthread_mutex_unlock(&f->pmutex);
 }
 
 static Frame *frame_queue_peek(FrameQueue *f) {
@@ -429,12 +419,12 @@ static Frame *frame_queue_peek_last(FrameQueue *f) {
 
 static Frame *frame_queue_peek_writable(FrameQueue *f) {
     /* wait until we have space to put a new frame */
-    SDL_LockMutex(f->mutex);
+    pthread_mutex_lock(&f->pmutex);
     while (f->size >= f->max_size &&
            !f->pktq->abort_request) {
-        SDL_CondWait(f->cond, f->mutex);
+        pthread_cond_wait(&f->pcond, &f->pmutex);
     }
-    SDL_UnlockMutex(f->mutex);
+    pthread_mutex_unlock(&f->pmutex);
 
     if (f->pktq->abort_request)
         return NULL;
@@ -444,12 +434,12 @@ static Frame *frame_queue_peek_writable(FrameQueue *f) {
 
 static Frame *frame_queue_peek_readable(FrameQueue *f) {
     /* wait until we have a readable a new frame */
-    SDL_LockMutex(f->mutex);
+    pthread_mutex_lock(&f->pmutex);
     while (f->size - f->rindex_shown <= 0 &&
            !f->pktq->abort_request) {
-        SDL_CondWait(f->cond, f->mutex);
+        pthread_cond_wait(&f->pcond, &f->pmutex);
     }
-    SDL_UnlockMutex(f->mutex);
+    pthread_mutex_unlock(&f->pmutex);
 
     if (f->pktq->abort_request)
         return NULL;
@@ -460,10 +450,10 @@ static Frame *frame_queue_peek_readable(FrameQueue *f) {
 static void frame_queue_push(FrameQueue *f) {
     if (++f->windex == f->max_size)
         f->windex = 0;
-    SDL_LockMutex(f->mutex);
+    pthread_mutex_lock(&f->pmutex);
     f->size++;
-    SDL_CondSignal(f->cond);
-    SDL_UnlockMutex(f->mutex);
+    pthread_cond_signal(&f->pcond);
+    pthread_mutex_unlock(&f->pmutex);
 }
 
 static void frame_queue_next(FrameQueue *f) {
@@ -474,10 +464,10 @@ static void frame_queue_next(FrameQueue *f) {
     frame_queue_unref_item(&f->queue[f->rindex]);
     if (++f->rindex == f->max_size)
         f->rindex = 0;
-    SDL_LockMutex(f->mutex);
+    pthread_mutex_lock(&f->pmutex);
     f->size--;
-    SDL_CondSignal(f->cond);
-    SDL_UnlockMutex(f->mutex);
+    pthread_cond_signal(&f->pcond);
+    pthread_mutex_unlock(&f->pmutex);
 }
 
 /* return the number of undisplayed frames in the queue */
@@ -969,7 +959,7 @@ static void stream_close(VideoState *is) {
     frame_queue_destory(&is->pictq);
     frame_queue_destory(&is->sampq);
     frame_queue_destory(&is->subpq);
-    SDL_DestroyCond(is->continue_read_thread);
+    pthread_cond_destroy(&is->pcontinue_read_thread);
     sws_freeContext(is->img_convert_ctx);
     sws_freeContext(is->sub_convert_ctx);
     av_free(is->filename);
@@ -1163,7 +1153,7 @@ static void stream_seek(VideoState *is, int64_t pos, int64_t rel, int seek_by_by
         is->seek_flags &= ~AVSEEK_FLAG_BYTE;
         if (seek_by_bytes)
             is->seek_flags |= AVSEEK_FLAG_BYTE;
-        SDL_CondSignal(is->continue_read_thread);
+        pthread_cond_signal(&is->pcontinue_read_thread);
     }
 }
 
@@ -1309,10 +1299,10 @@ static void video_refresh(void *opaque, double *remaining_time) {
             if (delay > 0 && time - is->frame_timer > AV_SYNC_THRESHOLD_MAX)
                 is->frame_timer = time;
 
-            SDL_LockMutex(is->pictq.mutex);
+            pthread_mutex_lock(&is->pictq.pmutex);
             if (!isnan(vp->pts))
                 update_video_pts(is, vp->pts, vp->pos, vp->serial);
-            SDL_UnlockMutex(is->pictq.mutex);
+            pthread_mutex_unlock(&is->pictq.pmutex);
 
             if (frame_queue_nb_remaining(&is->pictq) > 1) {
                 Frame *nextvp = frame_queue_peek_next(&is->pictq);
@@ -2373,7 +2363,7 @@ static int stream_component_open(VideoState *is, int stream_index) {
             is->video_stream = stream_index;
             is->video_st = ic->streams[stream_index];
 
-            decoder_init(&is->viddec, avctx, &is->videoq, is->continue_read_thread);
+            decoder_init(&is->viddec, avctx, &is->videoq, &is->pcontinue_read_thread);
             /*if ((ret = decoder_start(&is->viddec, video_thread, "video_decoder", is)) < 0)
                 goto out;*/
             is->queue_attachments_req = 1;
@@ -2461,7 +2451,7 @@ static int stream_component_open(VideoState *is, int stream_index) {
             is->audio_stream = stream_index;
             is->audio_st = ic->streams[stream_index];
 
-            decoder_init(&is->auddec, avctx, &is->audioq, is->continue_read_thread);
+            decoder_init(&is->auddec, avctx, &is->audioq, &is->pcontinue_read_thread);
             if ((is->ic->iformat->flags & (AVFMT_NOBINSEARCH | AVFMT_NOGENSEARCH | AVFMT_NO_BYTE_SEEK)) &&
                 !is->ic->iformat->read_seek) {
                 is->auddec.start_pts = is->audio_st->start_time;
@@ -2529,7 +2519,7 @@ static int stream_component_open(VideoState *is, int stream_index) {
             is->subtitle_stream = stream_index;
             is->subtitle_st = ic->streams[stream_index];
 
-            decoder_init(&is->subdec, avctx, &is->subtitleq, is->continue_read_thread);
+            decoder_init(&is->subdec, avctx, &is->subtitleq, &is->pcontinue_read_thread);
             /*if ((ret = decoder_start(&is->subdec, subtitle_thread, "subtitle_decoder", is)) < 0)
                 goto out;*/
             break;
@@ -2587,6 +2577,7 @@ static int read_thread2(void *arg) {
     int pkt_in_play_range = 0;
     int64_t pkt_ts;
     int ret;
+    pthread_mutex_t wait_mutex = PTHREAD_MUTEX_INITIALIZER;
 
     // seekTo
     /*double incr, pos;
@@ -2615,15 +2606,12 @@ static int read_thread2(void *arg) {
         stream_seek(is, (int64_t) (pos * AV_TIME_BASE), (int64_t) (incr * AV_TIME_BASE), 0);
     }*/
 
-    SDL_mutex *wait_mutex = SDL_CreateMutex();
-    if (!wait_mutex) {
-        av_log(NULL, AV_LOG_FATAL, "SDL_CreateMutex(): %s\n", SDL_GetError());
-        ret = AVERROR(ENOMEM);
-        goto fail;
-    }
-
     printf("read_thread2() video_stream = %d\n", video_state->video_stream);
     printf("read_thread2() audio_stream = %d\n", video_state->audio_stream);
+
+    struct timespec abstime;
+    struct timeval now;
+    long timeout_ms = 10; // wait time 10ms
 
     for (;;) {
         // 调用stream_close后为1
@@ -2720,9 +2708,14 @@ static int read_thread2(void *arg) {
                      stream_has_enough_packets(is->subtitle_st, is->subtitle_stream, &is->subtitleq)))) {
             //printf("read_thread2() SDL_CondWaitTimeout(10)\n");
             /* wait 10 ms */
-            SDL_LockMutex(wait_mutex);
-            SDL_CondWaitTimeout(is->continue_read_thread, wait_mutex, 10);
-            SDL_UnlockMutex(wait_mutex);
+            pthread_mutex_lock(&wait_mutex);
+            gettimeofday(&now, NULL);
+            long nsec = now.tv_usec * 1000 + (timeout_ms % 1000) * 1000000;
+            abstime.tv_sec = now.tv_sec + nsec / 1000000000 + timeout_ms / 1000;
+            abstime.tv_nsec = nsec % 1000000000;
+            pthread_cond_timedwait(&is->pcontinue_read_thread, &wait_mutex, &abstime);
+            pthread_mutex_unlock(&wait_mutex);
+
             continue;
         }
 
@@ -2755,9 +2748,15 @@ static int read_thread2(void *arg) {
             }
             if (ic->pb && ic->pb->error)
                 break;
-            SDL_LockMutex(wait_mutex);
-            SDL_CondWaitTimeout(is->continue_read_thread, wait_mutex, 10);
-            SDL_UnlockMutex(wait_mutex);
+
+            pthread_mutex_lock(&wait_mutex);
+            gettimeofday(&now, NULL);
+            long nsec = now.tv_usec * 1000 + (timeout_ms % 1000) * 1000000;
+            abstime.tv_sec = now.tv_sec + nsec / 1000000000 + timeout_ms / 1000;
+            abstime.tv_nsec = nsec % 1000000000;
+            pthread_cond_timedwait(&is->pcontinue_read_thread, &wait_mutex, &abstime);
+            pthread_mutex_unlock(&wait_mutex);
+
             continue;
         } else {
             is->eof = 0;
@@ -2816,7 +2815,7 @@ static int read_thread2(void *arg) {
         event.user.data1 = is;
         SDL_PushEvent(&event);
     }
-    SDL_DestroyMutex(wait_mutex);
+    pthread_mutex_destroy(&wait_mutex);
     printf("read_thread2() end\n");
     return ret;
 }
@@ -3065,10 +3064,7 @@ static VideoState *stream_open(const char *filename, AVInputFormat *iformat) {
     //需要调用av_free释放空间
     if (!(is->filename = av_strdup(filename)))
         goto fail;
-    if (!(is->continue_read_thread = SDL_CreateCond())) {
-        av_log(NULL, AV_LOG_FATAL, "SDL_CreateCond(): %s\n", SDL_GetError());
-        goto fail;
-    }
+    is->pcontinue_read_thread = PTHREAD_COND_INITIALIZER;
     is->last_video_stream = is->video_stream = -1;
     is->last_audio_stream = is->audio_stream = -1;
     is->last_subtitle_stream = is->subtitle_stream = -1;
@@ -3827,9 +3823,9 @@ int main(int argc, char **argv) {
     input_filename = "https://cdn1.ibizastream.biz:441/free/1/playlist_dvr.m3u8";// *
     input_filename = "/Users/alexander/Downloads/小品-吃面.mp4";
     input_filename = "/Users/alexander/Movies/Movies/广告-20200511135626.h264";
-    input_filename = "https://zb3.qhqsnedu.com/live/chingyinglam/playlist.m3u8";// 林正英
     input_filename = "https://zb3.qhqsnedu.com/live/zhouxingxinga/playlist.m3u8";// 周星驰
     input_filename = "http://ivi.bupt.edu.cn/hls/cctv6hd.m3u8";
+    input_filename = "https://zb3.qhqsnedu.com/live/chingyinglam/playlist.m3u8";// 林正英
     if (!input_filename) {
         show_usage();
         av_log(NULL, AV_LOG_FATAL, "An input file must be specified\n");
