@@ -2775,29 +2775,11 @@ static int read_thread(void *arg) {
         //printf("read_thread() pkt_ts: %ld\n", (long) pkt_ts);
         if (pkt->stream_index == is->audio_stream && pkt_in_play_range) {
             packet_queue_put(&is->audioq, pkt);
-            /*if (seek_by_bytes
-                && audio_packets != is->audioq.nb_packets
-                && is->audioq.nb_packets % 500 == 0) {
-                audio_packets = is->audioq.nb_packets;
-                printf("read_thread() audio    packets = %d\n", is->audioq.nb_packets);
-            }*/
         } else if (pkt->stream_index == is->video_stream && pkt_in_play_range
                    && !(is->video_st->disposition & AV_DISPOSITION_ATTACHED_PIC)) {
             packet_queue_put(&is->videoq, pkt);
-            /*if (seek_by_bytes
-                && video_packets != is->videoq.nb_packets
-                && is->videoq.nb_packets % 500 == 0) {
-                video_packets = is->videoq.nb_packets;
-                printf("read_thread() video    packets = %d\n", is->videoq.nb_packets);
-            }*/
         } else if (pkt->stream_index == is->subtitle_stream && pkt_in_play_range) {
             packet_queue_put(&is->subtitleq, pkt);
-            /*if (seek_by_bytes
-                && subtitle_packets != is->subtitleq.nb_packets
-                && is->subtitleq.nb_packets % 500 == 0) {
-                subtitle_packets = is->subtitleq.nb_packets;
-                printf("read_thread() subtitle packets = %d\n", is->subtitleq.nb_packets);
-            }*/
         } else {
             av_packet_unref(pkt);
         }
@@ -3401,6 +3383,17 @@ static void event_loop(VideoState *is) {// 原来的参数名: cur_stream
                     case SDLK_DOWN:
                         incr = -60.0;
                     do_seek:
+
+                        /*pos = get_master_clock(is);
+                        if (isnan(pos))
+                            pos = (double) is->seek_pos / AV_TIME_BASE;
+                        pos += incr;
+                        if (is->ic->start_time != AV_NOPTS_VALUE
+                            && pos < is->ic->start_time / (double) AV_TIME_BASE)
+                            pos = is->ic->start_time / (double) AV_TIME_BASE;
+                        printf("event_loop()  pos = %lf incr = %lf seek_by_bytes = %d\n", pos, incr, seek_by_bytes);
+                        stream_seek(is, (int64_t) (pos * AV_TIME_BASE), (int64_t) (incr * AV_TIME_BASE), 0);*/
+
                         if (seek_by_bytes) {
                             pos = -1;
                             if (pos < 0 && is->video_stream >= 0)
@@ -3829,8 +3822,8 @@ int main(int argc, char **argv) {
     input_filename = "/Users/alexander/Downloads/千千阙歌.mp4";
     input_filename = "https://meiju9.qhqsnedu.com/20190823/1RSrZA26/2000kb/hls/index.m3u8";
     input_filename = "https://meiju.qhqsnedu.com/20181202/zbUvAw69/2000kb/hls/index.m3u8";
-    input_filename = "https://fangao.qhqsnedu.com/video/20190901/88c29da8beab47778c7329ec9444a9a4/cloudv-transfer/55555555ps61060q5556p165341q8o3r_f533a63031c74bbdb159da0479f79482_0_3.m3u8";
     input_filename = "https://cdn1.ibizastream.biz:441/free/1/playlist_dvr.m3u8";// *
+    input_filename = "https://fangao.qhqsnedu.com/video/20190901/88c29da8beab47778c7329ec9444a9a4/cloudv-transfer/55555555ps61060q5556p165341q8o3r_f533a63031c74bbdb159da0479f79482_0_3.m3u8";
     input_filename = "/Users/alexander/Downloads/小品-吃面.mp4";
     input_filename = "/Users/alexander/Movies/Movies/广告-20200511135626.h264";
     input_filename = "https://zb3.qhqsnedu.com/live/zhouxingxinga/playlist.m3u8";// 周星驰
