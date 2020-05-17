@@ -97,7 +97,7 @@ extern "C" {
 
 #define USE_ONEPASS_SUBTITLE_RENDER 1
 
-//#define OS_ANDROID
+#define OS_ANDROID
 #define MAX_AUDIO_FRAME_SIZE 19200
 
 static unsigned sws_flags = SWS_BICUBIC;

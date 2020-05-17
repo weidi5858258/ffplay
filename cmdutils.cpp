@@ -1900,6 +1900,7 @@ static void show_help_demuxer(const char *name)
 
 static void show_help_protocol(const char *name)
 {
+    printf("show_help_protocol() name = %s\n", name);
     const AVClass *proto_class;
 
     if (!name) {
@@ -1907,13 +1908,12 @@ static void show_help_protocol(const char *name)
         return;
     }
 
-    proto_class = avio_protocol_get_class(name);
+    /*proto_class = avio_protocol_get_class(name);
     if (!proto_class) {
         av_log(NULL, AV_LOG_ERROR, "Unknown protocol '%s'.\n", name);
         return;
     }
-
-    show_help_children(proto_class, AV_OPT_FLAG_DECODING_PARAM | AV_OPT_FLAG_ENCODING_PARAM);
+    show_help_children(proto_class, AV_OPT_FLAG_DECODING_PARAM | AV_OPT_FLAG_ENCODING_PARAM);*/
 }
 
 static void show_help_muxer(const char *name)

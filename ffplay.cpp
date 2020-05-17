@@ -2369,43 +2369,43 @@ static int stream_component_open(VideoState *is, int stream_index) {
             is->queue_attachments_req = 1;
 
 #ifdef OS_ANDROID
-        is->rgbAVFrame = av_frame_alloc();
-        image_get_buffer_size = av_image_get_buffer_size(wanted_pix_fmt, avctx->width, avctx->height, 1);
-        is->videoOutBufferSize = image_get_buffer_size * sizeof(unsigned char);
-        is->videoOutBuffer = (unsigned char *) av_malloc(is->videoOutBufferSize);
-        image_fill_arrays = av_image_fill_arrays(is->rgbAVFrame->data,
-                                                 is->rgbAVFrame->linesize,
-                                                 is->videoOutBuffer,
-                                                 wanted_pix_fmt,
-                                                 avctx->width,
-                                                 avctx->height,
-                                                 1);
-        printf("stream_component_open()        avctx->pix_fmt = %d\n", av_get_pix_fmt_name(avctx->pix_fmt));
-        printf("stream_component_open()        wanted_pix_fmt = %d\n", av_get_pix_fmt_name(wanted_pix_fmt));
-        printf("stream_component_open() image_get_buffer_size = %d\n", image_get_buffer_size);
-        printf("stream_component_open()    videoOutBufferSize = %d\n", is->videoOutBufferSize);
-        printf("stream_component_open()     image_fill_arrays = %d\n", image_fill_arrays);
-        if (image_fill_arrays < 0)
-            goto fail;
-        swsContext = sws_getContext(avctx->width, avctx->height, avctx->pix_fmt,
-                                    avctx->width, avctx->height, wanted_pix_fmt,
-                                    SWS_BICUBIC, NULL, NULL, NULL);
-        if (!swsContext) {
-            printf("stream_component_open() swsContext is NULL\n");
-            goto fail;
-        }
-        if (is->rgbAVFrame) {
-            av_frame_free(&is->rgbAVFrame);
-            is->rgbAVFrame = nullptr;
-        }
-        if (is->videoOutBuffer) {
-            av_free(is->videoOutBuffer);
-            is->videoOutBuffer = nullptr;
-        }
-        if (swsContext) {
-            sws_freeContext(swsContext);
-            swsContext = nullptr;
-        }
+            is->rgbAVFrame = av_frame_alloc();
+            image_get_buffer_size = av_image_get_buffer_size(wanted_pix_fmt, avctx->width, avctx->height, 1);
+            is->videoOutBufferSize = image_get_buffer_size * sizeof(unsigned char);
+            is->videoOutBuffer = (unsigned char *) av_malloc(is->videoOutBufferSize);
+            image_fill_arrays = av_image_fill_arrays(is->rgbAVFrame->data,
+                                                     is->rgbAVFrame->linesize,
+                                                     is->videoOutBuffer,
+                                                     wanted_pix_fmt,
+                                                     avctx->width,
+                                                     avctx->height,
+                                                     1);
+            printf("stream_component_open()        avctx->pix_fmt = %d\n", av_get_pix_fmt_name(avctx->pix_fmt));
+            printf("stream_component_open()        wanted_pix_fmt = %d\n", av_get_pix_fmt_name(wanted_pix_fmt));
+            printf("stream_component_open() image_get_buffer_size = %d\n", image_get_buffer_size);
+            printf("stream_component_open()    videoOutBufferSize = %d\n", is->videoOutBufferSize);
+            printf("stream_component_open()     image_fill_arrays = %d\n", image_fill_arrays);
+            if (image_fill_arrays < 0)
+                goto fail;
+            swsContext = sws_getContext(avctx->width, avctx->height, avctx->pix_fmt,
+                                        avctx->width, avctx->height, wanted_pix_fmt,
+                                        SWS_BICUBIC, NULL, NULL, NULL);
+            if (!swsContext) {
+                printf("stream_component_open() swsContext is NULL\n");
+                goto fail;
+            }
+            if (is->rgbAVFrame) {
+                av_frame_free(&is->rgbAVFrame);
+                is->rgbAVFrame = nullptr;
+            }
+            if (is->videoOutBuffer) {
+                av_free(is->videoOutBuffer);
+                is->videoOutBuffer = nullptr;
+            }
+            if (swsContext) {
+                sws_freeContext(swsContext);
+                swsContext = nullptr;
+            }
 #else
 #endif
             break;
@@ -2463,55 +2463,55 @@ static int stream_component_open(VideoState *is, int stream_index) {
             SDL_PauseAudioDevice(audio_dev, 0);*/
 
 #ifdef OS_ANDROID
-        // android
-        wanted_sample_rate = sample_rate;
-        wanted_channels = av_get_channel_layout_nb_channels(wanted_channel_layout);
+            // android
+            wanted_sample_rate = sample_rate;
+            wanted_channels = av_get_channel_layout_nb_channels(wanted_channel_layout);
 
-        printf("stream_component_open()           sample_rate = %d\n", sample_rate);
-        printf("stream_component_open()    avctx->sample_rate = %d\n", avctx->sample_rate);
-        printf("stream_component_open()    wanted_sample_rate = %d\n", wanted_sample_rate);
-        printf("stream_component_open()              channels = %d\n", nb_channels);
-        printf("stream_component_open()       avctx->channels = %d\n", avctx->channels);
-        printf("stream_component_open()       wanted_channels = %d\n", wanted_channels);
-        printf("stream_component_open()            sample_fmt = %d\n", av_get_sample_fmt_name(sample_fmt));
-        printf("stream_component_open()     avctx->sample_fmt = %d\n", av_get_sample_fmt_name(avctx->sample_fmt));
-        printf("stream_component_open()     wanted_sample_fmt = %d\n", av_get_sample_fmt_name(wanted_sample_fmt));
-        printf("stream_component_open()        channel_layout = %d\n", channel_layout);
-        printf("stream_component_open() avctx->channel_layout = %d\n", avctx->channel_layout);
-        printf("stream_component_open() wanted_channel_layout = %d\n", wanted_channel_layout);
+            printf("stream_component_open()           sample_rate = %d\n", sample_rate);
+            printf("stream_component_open()    avctx->sample_rate = %d\n", avctx->sample_rate);
+            printf("stream_component_open()    wanted_sample_rate = %d\n", wanted_sample_rate);
+            printf("stream_component_open()              channels = %d\n", nb_channels);
+            printf("stream_component_open()       avctx->channels = %d\n", avctx->channels);
+            printf("stream_component_open()       wanted_channels = %d\n", wanted_channels);
+            printf("stream_component_open()            sample_fmt = %d\n", av_get_sample_fmt_name(sample_fmt));
+            printf("stream_component_open()     avctx->sample_fmt = %d\n", av_get_sample_fmt_name(avctx->sample_fmt));
+            printf("stream_component_open()     wanted_sample_fmt = %d\n", av_get_sample_fmt_name(wanted_sample_fmt));
+            printf("stream_component_open()        channel_layout = %d\n", channel_layout);
+            printf("stream_component_open() avctx->channel_layout = %d\n", avctx->channel_layout);
+            printf("stream_component_open() wanted_channel_layout = %d\n", wanted_channel_layout);
 
-        swrContext = swr_alloc();
-        swr_alloc_set_opts(swrContext,
-                           wanted_channel_layout,
-                           wanted_sample_fmt,
-                           wanted_sample_rate,
-                           channel_layout,
-                           static_cast<AVSampleFormat>(sample_fmt),// avctx->sample_fmt
-                           sample_rate,
-                           0, NULL);
-        if (!swrContext) {
-            printf("stream_component_open() swrContext is NULL\n");
-            goto fail;
-        } else {
-            ret = swr_init(swrContext);
-            if (ret != 0) {
-                printf("stream_component_open() swrContext swr_init failed\n");
+            swrContext = swr_alloc();
+            swr_alloc_set_opts(swrContext,
+                               wanted_channel_layout,
+                               wanted_sample_fmt,
+                               wanted_sample_rate,
+                               channel_layout,
+                               static_cast<AVSampleFormat>(sample_fmt),// avctx->sample_fmt
+                               sample_rate,
+                               0, NULL);
+            if (!swrContext) {
+                printf("stream_component_open() swrContext is NULL\n");
                 goto fail;
             } else {
-                printf("stream_component_open() swrContext swr_init success\n");
+                ret = swr_init(swrContext);
+                if (ret != 0) {
+                    printf("stream_component_open() swrContext swr_init failed\n");
+                    goto fail;
+                } else {
+                    printf("stream_component_open() swrContext swr_init success\n");
+                }
             }
-        }
-        if (swrContext) {
-            swr_free(&swrContext);
-            swrContext = nullptr;
-        }
-        //createAudioTrack(wanted_sample_rate, wanted_channels, audioFormat);
-        is->audioOutBuffer = (unsigned char *) av_malloc(MAX_AUDIO_FRAME_SIZE);
-        is->audioOutBufferSize = MAX_AUDIO_FRAME_SIZE;
-        if (is->audioOutBuffer) {
-            av_free(is->audioOutBuffer);
-            is->audioOutBuffer = nullptr;
-        }
+            if (swrContext) {
+                swr_free(&swrContext);
+                swrContext = nullptr;
+            }
+            //createAudioTrack(wanted_sample_rate, wanted_channels, audioFormat);
+            is->audioOutBuffer = (unsigned char *) av_malloc(MAX_AUDIO_FRAME_SIZE);
+            is->audioOutBufferSize = MAX_AUDIO_FRAME_SIZE;
+            if (is->audioOutBuffer) {
+                av_free(is->audioOutBuffer);
+                is->audioOutBuffer = nullptr;
+            }
 #else
 #endif
             break;
@@ -3735,6 +3735,7 @@ void show_help_default(const char *opt, const char *arg) {
 
 /* Called from the main */
 int main(int argc, char **argv) {
+    printf("main() av_version_info = %s\n", av_version_info());
     printf("main() argc = %d\n", argc);
     for (int j = 0; j < argc; j++) {
         printf("main() argv[%d]: %s\n", j, argv[j]);
@@ -3832,9 +3833,9 @@ int main(int argc, char **argv) {
     input_filename = "https://cdn1.ibizastream.biz:441/free/1/playlist_dvr.m3u8";// *
     input_filename = "/Users/alexander/Downloads/小品-吃面.mp4";
     input_filename = "/Users/alexander/Movies/Movies/广告-20200511135626.h264";
-    input_filename = "https://zb3.qhqsnedu.com/live/chingyinglam/playlist.m3u8";// 林正英
     input_filename = "https://zb3.qhqsnedu.com/live/zhouxingxinga/playlist.m3u8";// 周星驰
     input_filename = "http://ivi.bupt.edu.cn/hls/cctv6hd.m3u8";
+    input_filename = "https://zb3.qhqsnedu.com/live/chingyinglam/playlist.m3u8";// 林正英
     if (!input_filename) {
         show_usage();
         av_log(NULL, AV_LOG_FATAL, "An input file must be specified\n");
