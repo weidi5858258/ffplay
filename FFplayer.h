@@ -102,6 +102,12 @@ extern "C" {
 
 static unsigned sws_flags = SWS_BICUBIC;
 
+enum {
+    AV_SYNC_AUDIO_MASTER, /* default choice */
+    AV_SYNC_VIDEO_MASTER,
+    AV_SYNC_EXTERNAL_CLOCK, /* synchronize to an external clock */
+};
+
 // 就是一个节点(node)
 typedef struct MyAVPacketList {
     AVPacket pkt;
@@ -120,9 +126,11 @@ typedef struct PacketQueue {
     int64_t duration;
     // packet_queue_init(1) packet_queue_start(0)
     int abort_request;
-    // init(0)
+    // init(0) packet_queue_put_private(++)
     int serial;
+    // packet_queue_init
     SDL_mutex *mutex;
+    // packet_queue_init
     SDL_cond *cond;
 } PacketQueue;
 
@@ -180,16 +188,12 @@ typedef struct FrameQueue {
     // video(1) audio(1) subtitle(0)
     int keep_last;
     int rindex_shown;
-    SDL_mutex *mutex;
-    SDL_cond *cond;
     PacketQueue *pktq;
+    // frame_queue_init
+    SDL_mutex *mutex;
+    // frame_queue_init
+    SDL_cond *cond;
 } FrameQueue;
-
-enum {
-    AV_SYNC_AUDIO_MASTER, /* default choice */
-    AV_SYNC_VIDEO_MASTER,
-    AV_SYNC_EXTERNAL_CLOCK, /* synchronize to an external clock */
-};
 
 typedef struct Decoder {
     AVPacket pkt;
@@ -200,11 +204,13 @@ typedef struct Decoder {
     int finished;
     int packet_pending;
     // 指向is->continue_read_thread
-    SDL_cond *empty_queue_cond;
     int64_t start_pts;
     AVRational start_pts_tb;
     int64_t next_pts;
     AVRational next_pts_tb;
+    // decoder_init 指针指向VideoState::continue_read_thread
+    SDL_cond *empty_queue_cond;
+    // decoder_start
     SDL_Thread *decoder_tid;
 } Decoder;
 

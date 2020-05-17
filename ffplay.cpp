@@ -176,8 +176,8 @@ static void packet_queue_flush(PacketQueue *q) {
         av_packet_unref(&pkt->pkt);
         av_freep(&pkt);
     }
-    q->last_pkt = NULL;
     q->first_pkt = NULL;
+    q->last_pkt = NULL;
     q->nb_packets = 0;
     q->size = 0;
     q->duration = 0;
@@ -2186,8 +2186,10 @@ static void sdl_audio_callback(void *opaque, Uint8 *stream, int len) {
     is->audio_write_buf_size = is->audio_buf_size - is->audio_buf_index;
     /* Let's assume the audio driver that is used by SDL has two periods. */
     if (!isnan(is->audio_clock)) {
-        set_clock_at(&is->audclk, is->audio_clock - (double) (2 * is->audio_hw_buf_size + is->audio_write_buf_size) /
-                                                    is->audio_tgt.bytes_per_sec, is->audio_clock_serial,
+        set_clock_at(&is->audclk,
+                     is->audio_clock -
+                     (double) (2 * is->audio_hw_buf_size + is->audio_write_buf_size) / is->audio_tgt.bytes_per_sec,
+                     is->audio_clock_serial,
                      audio_callback_time / 1000000.0);
         sync_clock_to_slave(&is->extclk, &is->audclk);
     }
@@ -3058,9 +3060,6 @@ static VideoState *stream_open(const char *filename, AVInputFormat *iformat) {
         return NULL;
     video_state = is;
 
-    is->last_video_stream = is->video_stream = -1;
-    is->last_audio_stream = is->audio_stream = -1;
-    is->last_subtitle_stream = is->subtitle_stream = -1;
     //filename为需要拷贝的字符串
     //av_strdup返回一个指向新分配的内存，该内存拷贝了一份字符串，如果无法分配出空间，则返回NULL
     //需要调用av_free释放空间
@@ -3070,6 +3069,9 @@ static VideoState *stream_open(const char *filename, AVInputFormat *iformat) {
         av_log(NULL, AV_LOG_FATAL, "SDL_CreateCond(): %s\n", SDL_GetError());
         goto fail;
     }
+    is->last_video_stream = is->video_stream = -1;
+    is->last_audio_stream = is->audio_stream = -1;
+    is->last_subtitle_stream = is->subtitle_stream = -1;
     is->ytop = 0;
     is->xleft = 0;
     is->audio_clock_serial = -1;
@@ -3833,7 +3835,7 @@ int main(int argc, char **argv) {
         av_log(NULL, AV_LOG_FATAL, "An input file must be specified\n");
         av_log(NULL, AV_LOG_FATAL,
                "Use -h to get full help or, even better, run 'man %s'\n", program_name);
-        exit(1);
+        do_exit(NULL);
     }
 
     av_init_packet(&flush_pkt);
