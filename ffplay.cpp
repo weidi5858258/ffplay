@@ -2315,7 +2315,7 @@ static int stream_component_open(VideoState *is, int stream_index) {
             break;
     }
     if (forced_codec_name) {
-        printf("read_thread() forced_codec_name = %s\n", forced_codec_name);
+        printf("create_avformat_context() forced_codec_name = %s\n", forced_codec_name);
         codec = avcodec_find_decoder_by_name(forced_codec_name);
     }
     if (!codec) {
@@ -2568,8 +2568,8 @@ static int is_realtime(AVFormatContext *s) {
     return 0;
 }
 
-static int read_thread2(void *arg) {
-    printf("read_thread2() start\n");
+static int read_thread(void *arg) {
+    printf("read_thread() start\n");
     VideoState *is = static_cast<VideoState *>(arg);
     AVFormatContext *ic = is->ic;
     AVPacket pkt1, *pkt = &pkt1;
@@ -2596,7 +2596,7 @@ static int read_thread2(void *arg) {
             incr *= 180000.0;
         printf("read_thread2()  pos = %lf incr = %lf\n", pos, incr);
         pos += incr;
-        printf("read_thread2()  pos = %lf incr = %lf\n", pos, incr);
+        printf("read_thread()  pos = %lf incr = %lf\n", pos, incr);
         pos = 22000000.000000;
         stream_seek(is, pos, incr, 1);
     } else {
@@ -2606,8 +2606,8 @@ static int read_thread2(void *arg) {
         stream_seek(is, (int64_t) (pos * AV_TIME_BASE), (int64_t) (incr * AV_TIME_BASE), 0);
     }*/
 
-    printf("read_thread2() video_stream = %d\n", video_state->video_stream);
-    printf("read_thread2() audio_stream = %d\n", video_state->audio_stream);
+    printf("read_thread() video_stream = %d\n", video_state->video_stream);
+    printf("read_thread() audio_stream = %d\n", video_state->audio_stream);
 
     struct timespec abstime;
     struct timeval now;
@@ -2620,21 +2620,21 @@ static int read_thread2(void *arg) {
 
         //
         if (is->paused != is->last_paused) {
-            printf("read_thread2() is->paused = %d is->last_paused = %d\n", is->paused, is->last_paused);
+            printf("read_thread() is->paused = %d is->last_paused = %d\n", is->paused, is->last_paused);
             is->last_paused = is->paused;
             if (is->paused) {
                 is->read_pause_return = av_read_pause(ic);
-                printf("read_thread2() av_read_pause read_pause_return = %d\n", is->read_pause_return);
+                printf("read_thread() av_read_pause read_pause_return = %d\n", is->read_pause_return);
             } else {
                 av_read_play(ic);
-                printf("read_thread2() av_read_play\n");
+                printf("read_thread() av_read_play\n");
             }
         }
 
 #if CONFIG_RTSP_DEMUXER || CONFIG_MMSH_PROTOCOL
         if (is->paused &&
             (!strcmp(ic->iformat->name, "rtsp") || (ic->pb && !strncmp(input_filename, "mmsh:", 5)))) {
-            printf("read_thread2() SDL_Delay(10)\n");
+            printf("read_thread() SDL_Delay(10)\n");
             /* wait 10 ms to avoid trying to get another packet */
             /* XXX: horrible */
             SDL_Delay(10);
@@ -2644,7 +2644,7 @@ static int read_thread2(void *arg) {
 
         // stream_seek
         if (is->seek_req) {
-            printf("read_thread2() is->seek_req\n");
+            printf("read_thread() is->seek_req\n");
             // INT64_MIN -9223372036854775808
             // INT64_MAX  9223372036854775807
             int64_t seek_target = is->seek_pos;
@@ -2652,12 +2652,12 @@ static int read_thread2(void *arg) {
             int64_t seek_max = is->seek_rel < 0 ? seek_target - is->seek_rel - 2 : INT64_MAX;
             // FIXME the +-2 is due to rounding being not done in the correct direction in generation
             //      of the seek_pos/seek_rel variables
-            printf("read_thread2()    seek_min = %ld\n", (long) seek_min);
-            printf("read_thread2() seek_target = %ld\n", (long) seek_target);
-            printf("read_thread2()    seek_max = %ld\n", (long) seek_max);
+            printf("read_thread()    seek_min = %ld\n", (long) seek_min);
+            printf("read_thread() seek_target = %ld\n", (long) seek_target);
+            printf("read_thread()    seek_max = %ld\n", (long) seek_max);
 
             ret = avformat_seek_file(is->ic, -1, seek_min, seek_target, seek_max, is->seek_flags);
-            printf("read_thread2()         ret = %d\n", ret);
+            printf("read_thread()         ret = %d\n", ret);
             if (ret < 0) {
                 av_log(NULL, AV_LOG_ERROR,
                        "%s: error while seeking\n", is->ic->url);
@@ -2689,7 +2689,7 @@ static int read_thread2(void *arg) {
 
         //
         if (is->queue_attachments_req) {
-            printf("read_thread2() is->queue_attachments_req\n");
+            printf("read_thread() is->queue_attachments_req\n");
             if (is->video_st && is->video_st->disposition & AV_DISPOSITION_ATTACHED_PIC) {
                 AVPacket copy;
                 if ((ret = av_packet_ref(&copy, &is->video_st->attached_pic)) < 0)
@@ -2706,7 +2706,7 @@ static int read_thread2(void *arg) {
                     (stream_has_enough_packets(is->audio_st, is->audio_stream, &is->audioq) &&
                      stream_has_enough_packets(is->video_st, is->video_stream, &is->videoq) &&
                      stream_has_enough_packets(is->subtitle_st, is->subtitle_stream, &is->subtitleq)))) {
-            //printf("read_thread2() SDL_CondWaitTimeout(10)\n");
+            //printf("read_thread() SDL_CondWaitTimeout(10)\n");
             /* wait 10 ms */
             pthread_mutex_lock(&wait_mutex);
             gettimeofday(&now, NULL);
@@ -2772,14 +2772,14 @@ static int read_thread2(void *arg) {
                 (double) (start_time != AV_NOPTS_VALUE ? start_time : 0) / 1000000
                 <= ((double) duration / 1000000);
 
-        //printf("read_thread2() pkt_ts: %ld\n", (long) pkt_ts);
+        //printf("read_thread() pkt_ts: %ld\n", (long) pkt_ts);
         if (pkt->stream_index == is->audio_stream && pkt_in_play_range) {
             packet_queue_put(&is->audioq, pkt);
             /*if (seek_by_bytes
                 && audio_packets != is->audioq.nb_packets
                 && is->audioq.nb_packets % 500 == 0) {
                 audio_packets = is->audioq.nb_packets;
-                printf("read_thread2() audio    packets = %d\n", is->audioq.nb_packets);
+                printf("read_thread() audio    packets = %d\n", is->audioq.nb_packets);
             }*/
         } else if (pkt->stream_index == is->video_stream && pkt_in_play_range
                    && !(is->video_st->disposition & AV_DISPOSITION_ATTACHED_PIC)) {
@@ -2788,7 +2788,7 @@ static int read_thread2(void *arg) {
                 && video_packets != is->videoq.nb_packets
                 && is->videoq.nb_packets % 500 == 0) {
                 video_packets = is->videoq.nb_packets;
-                printf("read_thread2() video    packets = %d\n", is->videoq.nb_packets);
+                printf("read_thread() video    packets = %d\n", is->videoq.nb_packets);
             }*/
         } else if (pkt->stream_index == is->subtitle_stream && pkt_in_play_range) {
             packet_queue_put(&is->subtitleq, pkt);
@@ -2796,7 +2796,7 @@ static int read_thread2(void *arg) {
                 && subtitle_packets != is->subtitleq.nb_packets
                 && is->subtitleq.nb_packets % 500 == 0) {
                 subtitle_packets = is->subtitleq.nb_packets;
-                printf("read_thread2() subtitle packets = %d\n", is->subtitleq.nb_packets);
+                printf("read_thread() subtitle packets = %d\n", is->subtitleq.nb_packets);
             }*/
         } else {
             av_packet_unref(pkt);
@@ -2816,13 +2816,13 @@ static int read_thread2(void *arg) {
         SDL_PushEvent(&event);
     }
     pthread_mutex_destroy(&wait_mutex);
-    printf("read_thread2() end\n");
+    printf("read_thread() end\n");
     return ret;
 }
 
 /* this thread gets the stream from the disk or the network */
-static int read_thread(void *arg) {
-    printf("read_thread() start\n");
+static int create_avformat_context(void *arg) {
+    printf("create_avformat_context() start\n");
     VideoState *is = static_cast<VideoState *>(arg);
     AVFormatContext *ic = NULL;
     AVDictionaryEntry *t = NULL;
@@ -2850,7 +2850,7 @@ static int read_thread(void *arg) {
         //ret = -1;
         goto fail;
     }
-    printf("read_thread() scan_all_pmts_set = %d\n", scan_all_pmts_set);// 1
+    printf("create_avformat_context() scan_all_pmts_set = %d\n", scan_all_pmts_set);// 1
     if (scan_all_pmts_set)
         av_dict_set(&format_opts, "scan_all_pmts", NULL, AV_DICT_MATCH_CASE);
 
@@ -2862,7 +2862,7 @@ static int read_thread(void *arg) {
     is->ic = ic;
 
     media_duration = (long) (ic->duration / AV_TIME_BASE);
-    printf("read_thread() media_duration = %ld\n", media_duration);
+    printf("create_avformat_context() media_duration = %ld\n", media_duration);
     if (ic->duration != AV_NOPTS_VALUE) {
         // 得到的是秒数
         media_duration = (long) ((ic->duration + 5000) / AV_TIME_BASE);
@@ -2874,17 +2874,17 @@ static int read_thread(void *arg) {
         mins %= 60;
         // 00:54:16
         // 单位: 秒
-        printf("read_thread() media  seconds = %ld\n", media_duration);
-        printf("read_thread() media          %02d:%02d:%02d\n", hours, mins, seconds);
+        printf("create_avformat_context() media  seconds = %ld\n", media_duration);
+        printf("create_avformat_context() media          %02d:%02d:%02d\n", hours, mins, seconds);
     }
 
-    printf("read_thread() genpts = %d\n", genpts);// 0
+    printf("create_avformat_context() genpts = %d\n", genpts);// 0
     if (genpts)
         ic->flags |= AVFMT_FLAG_GENPTS;
 
     av_format_inject_global_side_data(ic);
 
-    printf("read_thread() find_stream_info = %d\n", find_stream_info);// 1
+    printf("create_avformat_context() find_stream_info = %d\n", find_stream_info);// 1
     if (find_stream_info) {
         AVDictionary **opts = setup_find_stream_info_opts(ic, codec_opts);
         int orig_nb_streams = ic->nb_streams;
@@ -2906,24 +2906,24 @@ static int read_thread(void *arg) {
     if (ic->pb)
         ic->pb->eof_reached = 0; // FIXME hack, ffplay maybe should not use avio_feof() to test for the end
 
-    printf("read_thread() 1 seek_by_bytes = %d\n", seek_by_bytes);// -1
+    printf("create_avformat_context() 1 seek_by_bytes = %d\n", seek_by_bytes);// -1
     if (seek_by_bytes < 0) {
         int flag1 = ic->iformat->flags & AVFMT_TS_DISCONT;
         int flag2 = strcmp("ogg", ic->iformat->name);
-        printf("read_thread() flag1 = %d\n", flag1);
-        printf("read_thread() flag2 = %d\n", flag2);
+        printf("create_avformat_context() flag1 = %d\n", flag1);
+        printf("create_avformat_context() flag2 = %d\n", flag2);
         seek_by_bytes = !!(flag1) && flag2;
     }
-    printf("read_thread() 2 seek_by_bytes = %d\n", seek_by_bytes);// 0
+    printf("create_avformat_context() 2 seek_by_bytes = %d\n", seek_by_bytes);// 0
 
     is->max_frame_duration = (ic->iformat->flags & AVFMT_TS_DISCONT) ? 10.0 : 3600.0;
-    printf("read_thread() max_frame_duration = %lf\n", is->max_frame_duration);
+    printf("create_avformat_context() max_frame_duration = %lf\n", is->max_frame_duration);
 
     if (!window_title && (t = av_dict_get(ic->metadata, "title", NULL, 0)))
         window_title = av_asprintf("%s - %s", t->value, input_filename);
-    printf("read_thread() window_title = %s\n", window_title);
+    printf("create_avformat_context() window_title = %s\n", window_title);
 
-    printf("read_thread() start_time = %ld\n", (long) start_time);
+    printf("create_avformat_context() start_time = %ld\n", (long) start_time);
     /* if seeking requested, we execute it */
     if (start_time != AV_NOPTS_VALUE) {// -9223372036854775808
         int64_t timestamp;
@@ -2940,9 +2940,9 @@ static int read_thread(void *arg) {
     }
 
     is->realtime = is_realtime(ic);
-    printf("read_thread() realtime = %d\n", is->realtime);// 0
+    printf("create_avformat_context() realtime = %d\n", is->realtime);// 0
 
-    printf("read_thread() show_status = %d\n", show_status);
+    printf("create_avformat_context() show_status = %d\n", show_status);
     /*if (show_status)
         av_dump_format(ic, 0, is->filename, 0);*/
 
@@ -2950,7 +2950,7 @@ static int read_thread(void *arg) {
         AVStream *st = ic->streams[i];
         enum AVMediaType type = st->codecpar->codec_type;
         st->discard = AVDISCARD_ALL;
-        printf("read_thread() wanted_stream_spec[%d] = %s\n", type, wanted_stream_spec[type]);
+        printf("create_avformat_context() wanted_stream_spec[%d] = %s\n", type, wanted_stream_spec[type]);
         if (type >= 0 && wanted_stream_spec[type] && st_index[type] == -1)
             if (avformat_match_stream_specifier(ic, st, wanted_stream_spec[type]) > 0)
                 st_index[type] = i;
@@ -2962,12 +2962,12 @@ static int read_thread(void *arg) {
                    av_get_media_type_string(static_cast<AVMediaType>(i)));
             st_index[i] = INT_MAX;
         }
-        printf("read_thread() st_index[%d] = %d\n", i, st_index[i]);
+        printf("create_avformat_context() st_index[%d] = %d\n", i, st_index[i]);
     }
 
-    printf("read_thread()    audio_disable = %d\n", audio_disable);
-    printf("read_thread()    video_disable = %d\n", video_disable);
-    printf("read_thread() subtitle_disable = %d\n", subtitle_disable);
+    printf("create_avformat_context()    audio_disable = %d\n", audio_disable);
+    printf("create_avformat_context()    video_disable = %d\n", video_disable);
+    printf("create_avformat_context() subtitle_disable = %d\n", subtitle_disable);
     if (!video_disable)
         st_index[AVMEDIA_TYPE_VIDEO] =
                 av_find_best_stream(ic, AVMEDIA_TYPE_VIDEO,
@@ -2987,19 +2987,19 @@ static int read_thread(void *arg) {
                                                                        : st_index[AVMEDIA_TYPE_VIDEO]),
                                     NULL, 0);
     for (int i = 0; i < AVMEDIA_TYPE_NB; i++) {
-        printf("read_thread() st_index[%d] = %d\n", i, st_index[i]);
+        printf("create_avformat_context() st_index[%d] = %d\n", i, st_index[i]);
     }
 
     ret = -1;
     is->show_mode = show_mode;
-    printf("read_thread() show_mode = %d\n", show_mode);
+    printf("create_avformat_context() show_mode = %d\n", show_mode);
     if (st_index[AVMEDIA_TYPE_VIDEO] >= 0) {
         AVStream *st = ic->streams[st_index[AVMEDIA_TYPE_VIDEO]];
         AVCodecParameters *codecpar = st->codecpar;
         AVRational sar = av_guess_sample_aspect_ratio(ic, st, NULL);
         if (codecpar->width)
             set_default_window_size(codecpar->width, codecpar->height, sar);
-        printf("read_thread() width = %d height = %d\n", codecpar->width, codecpar->height);
+        printf("create_avformat_context() width = %d height = %d\n", codecpar->width, codecpar->height);
         ret = stream_component_open(is, st_index[AVMEDIA_TYPE_VIDEO]);
     }
 
@@ -3024,7 +3024,7 @@ static int read_thread(void *arg) {
 
     if (infinite_buffer < 0 && is->realtime)
         infinite_buffer = 1;
-    printf("read_thread() infinite_buffer = %d\n", infinite_buffer);// -1
+    printf("create_avformat_context() infinite_buffer = %d\n", infinite_buffer);// -1
 
     ret = 0;
     fail:
@@ -3040,8 +3040,8 @@ static int read_thread(void *arg) {
         event.user.data1 = is;
         SDL_PushEvent(&event);
     }
-    printf("read_thread() ret = %d\n", ret);
-    printf("read_thread() end\n");
+    printf("create_avformat_context() ret = %d\n", ret);
+    printf("create_avformat_context() end\n");
     return ret;
     //return 0;
 }
@@ -3058,12 +3058,14 @@ static VideoState *stream_open(const char *filename, AVInputFormat *iformat) {
     if (!is)
         return NULL;
     video_state = is;
+    int ret = 0;
 
     //filename为需要拷贝的字符串
     //av_strdup返回一个指向新分配的内存，该内存拷贝了一份字符串，如果无法分配出空间，则返回NULL
     //需要调用av_free释放空间
     if (!(is->filename = av_strdup(filename)))
         goto fail;
+
     is->pcontinue_read_thread = PTHREAD_COND_INITIALIZER;
     is->last_video_stream = is->video_stream = -1;
     is->last_audio_stream = is->audio_stream = -1;
@@ -3107,31 +3109,38 @@ static VideoState *stream_open(const char *filename, AVInputFormat *iformat) {
     is->muted = 0;
     is->av_sync_type = av_sync_type;
 
-    // 还是初始化过程
-    if (read_thread(is) < 0) {
-        printf("stream_open() read_thread(is) < 0\n");
+    if ((ret = create_avformat_context(is)) < 0) {
+        printf("stream_open() create_avformat_context(is) < 0\n");
+        goto fail;
+    }
+
+    ///////////////////////创建线程///////////////////////
+
+    if (!(is->read_tid = SDL_CreateThread(read_thread, "read_thread", is))) {
+        av_log(NULL, AV_LOG_FATAL, "SDL_CreateThread(): %s\n", SDL_GetError());
+        ret = -1;
         goto fail;
     }
 
     if (is->video_stream >= 0) {
-        if (decoder_start(&is->viddec, video_thread, "video_decoder", is) < 0)
+        if ((ret = decoder_start(&is->viddec, video_thread, "video_decoder", is)) < 0)
             goto fail;
     }
 
     if (is->audio_stream >= 0) {
-        if (decoder_start(&is->auddec, audio_thread, "audio_decoder", is) < 0)
+        if (ret = decoder_start(&is->auddec, audio_thread, "audio_decoder", is) < 0)
             goto fail;
         SDL_PauseAudioDevice(audio_dev, 0);
     }
 
     if (is->subtitle_stream >= 0) {
-        if (decoder_start(&is->subdec, subtitle_thread, "subtitle_decoder", is) < 0)
+        if ((ret = decoder_start(&is->subdec, subtitle_thread, "subtitle_decoder", is)) < 0)
             goto fail;
     }
 
-    if (!(is->read_tid = SDL_CreateThread(read_thread2, "read_thread2", is))) {
-        av_log(NULL, AV_LOG_FATAL, "SDL_CreateThread(): %s\n", SDL_GetError());
-        fail:
+    ret = 0;
+    fail:
+    if (ret < 0) {
         stream_close(is);
         return NULL;
     }
@@ -3300,7 +3309,7 @@ static void event_loop(VideoState *is) {// 原来的参数名: cur_stream
         //printf("event_loop() event.type = %d\n", event.type);
         switch (event.type) {
             case SDL_KEYDOWN:// 768
-                printf("event_loop()         SDL_KEYDOWN = %d\n", SDL_KEYDOWN);
+                //printf("event_loop()         SDL_KEYDOWN = %d\n", SDL_KEYDOWN);
                 if (exit_on_keydown ||
                     event.key.keysym.sym == SDLK_ESCAPE ||
                     event.key.keysym.sym == SDLK_q) {
@@ -3308,7 +3317,7 @@ static void event_loop(VideoState *is) {// 原来的参数名: cur_stream
                     break;
                 }
                 // If we don't yet have a window, skip all key events,
-                // because read_thread might still be initializing...
+                // because create_avformat_context might still be initializing...
                 if (!is->width)
                     continue;
                 // 某些键的功能
@@ -3823,9 +3832,9 @@ int main(int argc, char **argv) {
     input_filename = "https://cdn1.ibizastream.biz:441/free/1/playlist_dvr.m3u8";// *
     input_filename = "/Users/alexander/Downloads/小品-吃面.mp4";
     input_filename = "/Users/alexander/Movies/Movies/广告-20200511135626.h264";
+    input_filename = "https://zb3.qhqsnedu.com/live/chingyinglam/playlist.m3u8";// 林正英
     input_filename = "https://zb3.qhqsnedu.com/live/zhouxingxinga/playlist.m3u8";// 周星驰
     input_filename = "http://ivi.bupt.edu.cn/hls/cctv6hd.m3u8";
-    input_filename = "https://zb3.qhqsnedu.com/live/chingyinglam/playlist.m3u8";// 林正英
     if (!input_filename) {
         show_usage();
         av_log(NULL, AV_LOG_FATAL, "An input file must be specified\n");
