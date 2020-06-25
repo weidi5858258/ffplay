@@ -3725,9 +3725,10 @@ void show_help_default(const char *opt, const char *arg) {
            "left double-click   toggle full screen\n"
     );
 }
-
+void test();
 /* Called from the main */
 int main(int argc, char **argv) {
+    //test();
     printf("main() av_version_info = %s\n", av_version_info());
     printf("main() argc = %d\n", argc);
     for (int j = 0; j < argc; j++) {
@@ -3823,12 +3824,17 @@ int main(int argc, char **argv) {
     input_filename = "https://meiju9.qhqsnedu.com/20190823/1RSrZA26/2000kb/hls/index.m3u8";
     input_filename = "https://meiju.qhqsnedu.com/20181202/zbUvAw69/2000kb/hls/index.m3u8";
     input_filename = "https://cdn1.ibizastream.biz:441/free/1/playlist_dvr.m3u8";// *
-    input_filename = "https://fangao.qhqsnedu.com/video/20190901/88c29da8beab47778c7329ec9444a9a4/cloudv-transfer/55555555ps61060q5556p165341q8o3r_f533a63031c74bbdb159da0479f79482_0_3.m3u8";
-    input_filename = "/Users/alexander/Downloads/小品-吃面.mp4";
     input_filename = "/Users/alexander/Movies/Movies/广告-20200511135626.h264";
     input_filename = "https://zb3.qhqsnedu.com/live/zhouxingxinga/playlist.m3u8";// 周星驰
-    input_filename = "http://ivi.bupt.edu.cn/hls/cctv6hd.m3u8";
+    input_filename = "/Users/alexander/Downloads/小品-吃面.mp4";
+    input_filename = "https://fangao.qhqsnedu.com/video/20190901/88c29da8beab47778c7329ec9444a9a4/cloudv-transfer/55555555ps61060q5556p165341q8o3r_f533a63031c74bbdb159da0479f79482_0_3.m3u8";
+    input_filename = "http://ivi.bupt.edu.cn/hls/cctv6hd.m3u8";// CCTV-6综合高清
     input_filename = "https://zb3.qhqsnedu.com/live/chingyinglam/playlist.m3u8";// 林正英
+    input_filename = "https://meiju5.qhqsnedu.com/20190612/Zg1IVNGE/2000kb/hls/index.m3u8";
+    input_filename = "http://ivi.bupt.edu.cn/hls/cctv1hd.m3u8";// CCTV-1综合高清
+    input_filename = "http://ivi.bupt.edu.cn/hls/cctv13.m3u8";// CCTV-13新闻
+    input_filename = "http://101.72.196.41/r/baiducdnct.inter.iqiyi.com/tslive/c16_lb_huaijiujuchang_1080p_t10/c16_lb_huaijiujuchang_1080p_t10.m3u8";
+    input_filename = "/Users/alexander/Movies/AQUAMAN_Trailer_2_4K_ULTRA_HD_NEW2018.webm";
     if (!input_filename) {
         show_usage();
         av_log(NULL, AV_LOG_FATAL, "An input file must be specified\n");
@@ -3856,6 +3862,38 @@ int main(int argc, char **argv) {
     return 0;
 }
 
-void test() {
+typedef struct Wrapper {
+    int age;
+    char *name;
+};
 
+void test() {
+    Wrapper *wrapper1 = nullptr;
+    Wrapper *wrapper2 = nullptr;
+    wrapper1 = static_cast<Wrapper *>(av_mallocz(sizeof(Wrapper)));
+    wrapper2 = static_cast<Wrapper *>(av_mallocz(sizeof(Wrapper)));
+    memset(wrapper1, 0, sizeof(Wrapper));
+    memset(wrapper2, 0, sizeof(Wrapper));
+    wrapper1->age = 30;
+    wrapper1->name = "Mama";
+    wrapper2->age = 35;
+    wrapper2->name = "Baba";
+
+    printf("test() before wrapper1: %p\n", wrapper1);
+    printf("test() before wrapper2: %p\n", wrapper2);
+    printf("test() before wrapper1->age: %d, wrapper1->name: %s\n", wrapper1->age, wrapper1->name);
+    printf("test() before wrapper2->age: %d, wrapper2->name: %s\n", wrapper2->age, wrapper2->name);
+
+    Wrapper *tempWrapper = nullptr;
+    tempWrapper = wrapper1;
+    wrapper1 = wrapper2;
+    wrapper2 = tempWrapper;
+
+    printf("test() after  wrapper1: %p\n", wrapper1);
+    printf("test() after  wrapper2: %p\n", wrapper2);
+    printf("test() after  wrapper1->age: %d, wrapper1->name: %s\n", wrapper1->age, wrapper1->name);
+    printf("test() after  wrapper2->age: %d, wrapper2->name: %s\n", wrapper2->age, wrapper2->name);
+
+    av_free(wrapper1);
+    av_free(wrapper2);
 }
