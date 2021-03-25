@@ -1,5 +1,5 @@
-.git
-.idea/workspace.xml
 cmake-build-debug
+.idea
+.git
 .push_git.sh
 .git_push_impl.sh
