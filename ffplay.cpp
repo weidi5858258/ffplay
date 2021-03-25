@@ -3832,9 +3832,9 @@ int main(int argc, char **argv) {
     input_filename = "https://zb3.qhqsnedu.com/live/chingyinglam/playlist.m3u8";// 林正英
     input_filename = "https://meiju5.qhqsnedu.com/20190612/Zg1IVNGE/2000kb/hls/index.m3u8";
     input_filename = "http://ivi.bupt.edu.cn/hls/cctv1hd.m3u8";// CCTV-1综合高清
-    input_filename = "http://ivi.bupt.edu.cn/hls/cctv13.m3u8";// CCTV-13新闻
     input_filename = "http://101.72.196.41/r/baiducdnct.inter.iqiyi.com/tslive/c16_lb_huaijiujuchang_1080p_t10/c16_lb_huaijiujuchang_1080p_t10.m3u8";
     input_filename = "/Users/alexander/Movies/AQUAMAN_Trailer_2_4K_ULTRA_HD_NEW2018.webm";
+    input_filename = "http://ivi.bupt.edu.cn/hls/cctv13.m3u8";// CCTV-13新闻
     if (!input_filename) {
         show_usage();
         av_log(NULL, AV_LOG_FATAL, "An input file must be specified\n");

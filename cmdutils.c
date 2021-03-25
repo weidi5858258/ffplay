@@ -34,7 +34,6 @@
 #include "libavformat/avformat.h"
 #include "libavfilter/avfilter.h"
 #include "libavdevice/avdevice.h"
-#include "libavresample/avresample.h"
 #include "libswscale/swscale.h"
 #include "libswresample/swresample.h"
 #include "libpostproc/postprocess.h"
@@ -550,7 +549,7 @@ int opt_default(void *optctx, const char *opt, const char *arg)
     const char *p;
     const AVClass *cc = avcodec_get_class(), *fc = avformat_get_class();
 #if CONFIG_AVRESAMPLE
-    const AVClass *rc = avresample_get_class();
+    const AVClass *rc = swr_get_class();
 #endif
 #if CONFIG_SWSCALE
     const AVClass *sc = sws_get_class();
@@ -1107,14 +1106,6 @@ static int warned_cfg = 0;
         const char *indent = flags & INDENT? "  " : "";                 \
         if (flags & SHOW_VERSION) {                                     \
             unsigned int version = libname##_version();                 \
-            av_log(NULL, level,                                         \
-                   "%slib%-11s %2d.%3d.%3d / %2d.%3d.%3d\n",            \
-                   indent, #libname,                                    \
-                   LIB##LIBNAME##_VERSION_MAJOR,                        \
-                   LIB##LIBNAME##_VERSION_MINOR,                        \
-                   LIB##LIBNAME##_VERSION_MICRO,                        \
-                   AV_VERSION_MAJOR(version), AV_VERSION_MINOR(version),\
-                   AV_VERSION_MICRO(version));                          \
         }                                                               \
         if (flags & SHOW_CONFIG) {                                      \
             const char *cfg = libname##_configuration();                \
@@ -1138,7 +1129,7 @@ static void print_all_libs_info(int flags, int level)
     PRINT_LIB_INFO(avformat,   AVFORMAT,   flags, level);
     PRINT_LIB_INFO(avdevice,   AVDEVICE,   flags, level);
     PRINT_LIB_INFO(avfilter,   AVFILTER,   flags, level);
-    PRINT_LIB_INFO(avresample, AVRESAMPLE, flags, level);
+    //PRINT_LIB_INFO(avresample, AVRESAMPLE, flags, level);
     PRINT_LIB_INFO(swscale,    SWSCALE,    flags, level);
     PRINT_LIB_INFO(swresample, SWRESAMPLE, flags, level);
     PRINT_LIB_INFO(postproc,   POSTPROC,   flags, level);
@@ -1884,13 +1875,12 @@ static void show_help_protocol(const char *name)
         return;
     }
 
-    proto_class = avio_protocol_get_class(name);
+    /*proto_class = avio_protocol_get_class(name);
     if (!proto_class) {
         av_log(NULL, AV_LOG_ERROR, "Unknown protocol '%s'.\n", name);
         return;
     }
-
-    show_help_children(proto_class, AV_OPT_FLAG_DECODING_PARAM | AV_OPT_FLAG_ENCODING_PARAM);
+    show_help_children(proto_class, AV_OPT_FLAG_DECODING_PARAM | AV_OPT_FLAG_ENCODING_PARAM);*/
 }
 
 static void show_help_muxer(const char *name)

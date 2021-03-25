@@ -37,13 +37,11 @@ extern "C" {
 #include "config.h"
 #include "va_copy.h"
 #include "avio.h"
-//#include "libm.h"
 #include "libavformat/avformat.h"
 #include "libavfilter/avfilter.h"
 #include "libavdevice/avdevice.h"
-#include "libavresample/avresample.h"
-#include "libswscale/swscale.h"
 #include "libswresample/swresample.h"
+#include "libswscale/swscale.h"
 #include "libpostproc/postprocess.h"
 #include "libavutil/attributes.h"
 #include "libavutil/avassert.h"
@@ -58,7 +56,6 @@ extern "C" {
 #include "libavutil/dict.h"
 #include "libavutil/opt.h"
 #include "libavutil/cpu.h"
-#include "libavutil/ffversion.h"
 #include "libavutil/version.h"
 #include "cmdutils.h"
 
@@ -308,8 +305,7 @@ static inline void prepare_app_arguments(int *argc_ptr, char ***argv_ptr)
 }
 #endif /* HAVE_COMMANDLINETOARGVW */
 
-static int write_option(void *optctx, const OptionDef *po, const char *opt,
-                        const char *arg)
+static int write_option(void *optctx, const OptionDef *po, const char *opt, const char *arg)
 {
     /* new-style options contain an offset into optctx, old-style address of
      * a global var*/
@@ -566,7 +562,8 @@ int opt_default(void *optctx, const char *opt, const char *arg)
     const char *p;
     const AVClass *cc = avcodec_get_class(), *fc = avformat_get_class();
 #if CONFIG_AVRESAMPLE
-    const AVClass *rc = avresample_get_class();
+    //const AVClass *rc = avresample_get_class();
+    const AVClass *rc = swr_get_class();
 #endif
 #if CONFIG_SWSCALE
     const AVClass *sc = sws_get_class();
@@ -1161,7 +1158,7 @@ static void print_all_libs_info(int flags, int level)
     PRINT_LIB_INFO(avformat,   AVFORMAT,   flags, level);
     PRINT_LIB_INFO(avdevice,   AVDEVICE,   flags, level);
     PRINT_LIB_INFO(avfilter,   AVFILTER,   flags, level);
-    PRINT_LIB_INFO(avresample, AVRESAMPLE, flags, level);
+    //PRINT_LIB_INFO(avresample, AVRESAMPLE, flags, level);
     PRINT_LIB_INFO(swscale,    SWSCALE,    flags, level);
     PRINT_LIB_INFO(swresample, SWRESAMPLE, flags, level);
     PRINT_LIB_INFO(postproc,   POSTPROC,   flags, level);
