@@ -20,21 +20,17 @@ add_executable(
         network.h
         va_copy.h
         cmdutils.h
+        cmdutils.c
         intfloat.h
         rational.h
         attributes.h
         os_support.h
         mathematics.h
-        # 原来的文件
-        cmdutils.c
-#        ffplay.c
 
         # 自己新增的文件
-#        cmdutils.cpp
-        ffplay.cpp
-
+        ffplay.cpp # ubuntu中测试
         FFplayer.h
-        FFplayer.cpp
+        FFplayer.cpp # 移植到android去
 )
 # 要包含的头文件
 include_directories(

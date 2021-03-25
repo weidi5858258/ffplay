@@ -5,17 +5,19 @@
 #ifndef FFMPEG_STUDY_FFPLAYER_H
 #define FFMPEG_STUDY_FFPLAYER_H
 
-#ifdef __cplusplus
-extern "C" {
-#endif
-
-#include "config.h"
+#include <sys/time.h>
+#include <pthread.h>
 #include <inttypes.h>
 #include <math.h>
 #include <limits.h>
 #include <signal.h>
 #include <stdint.h>
 #include <assert.h>
+#include "config.h"
+
+#ifdef __cplusplus
+extern "C" {
+#endif
 
 #include "libavutil/avstring.h"
 #include "libavutil/eval.h"
