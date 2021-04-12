@@ -30,7 +30,7 @@ add_executable(
         # 自己新增的文件
         ffplay.cpp # ubuntu中测试
         FFplayer.h
-        FFplayer.cpp # 移植到android去
+#        FFplayer.cpp # 移植到android去
 )
 # 要包含的头文件
 include_directories(
