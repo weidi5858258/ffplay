@@ -4,9 +4,12 @@ project(ffplay)
 
 set(CMAKE_CXX_STANDARD 14)
 
+#error: invalid conversion from ‘const AVCodec*’ to ‘AVCodec*’ [-fpermissive]
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11 -fpermissive -g")
+
 #set(CMAKE_CXX_STANDARD 11)
-# 使用ffplay的代码时需要注释掉
-add_definitions(-std=c++11)
+#使用ffplay的代码时需要注释掉
+#add_definitions(-std=c++11)
 
 include_directories(.)
 
@@ -27,31 +30,27 @@ add_executable(
         os_support.h
         mathematics.h
 
-        # 自己新增的文件
-        ffplay.cpp # ubuntu中测试
-        FFplayer.h
-#        FFplayer.cpp # 移植到android去
-)
-# 要包含的头文件
-include_directories(
-        /usr/local/include
-#        /usr/local/include/lame
-#        /usr/local/Cellar/sdl2/2.0.10/include/SDL2
-#        /Users/alexander/mydev/tools/audio_video/ffmpeg_macos/include
-        /usr/include/SDL2
-        /root/mydev/tools/ffmpeg/ffmpeg_ubuntu/include
-)
-# 要包含的ffmpeg lib库
-set(FFMPEG_LIB_PATH
-#        /Users/alexander/mydev/tools/audio_video/ffmpeg_macos/lib
-        /root/mydev/tools/ffmpeg/ffmpeg_ubuntu/lib
-)
-# 要包含的sdl2 lib库
-set(SDL2_LIB_PATH
-#        /usr/local/Cellar/sdl2/2.0.10/lib
-        /usr/lib/x86_64-linux-gnu
+        ffplay.cpp
 )
 
+#要包含的头文件
+include_directories(
+        /usr/include
+        /usr/include/lame
+        /usr/include/SDL2
+        /root/mydev/tools/ffmpeg/ffmpeg_ubuntu/ffmpeg-n4.4-152-gdf288deb9b-linux64-gpl-shared-4.4/include
+        #/usr/local/Cellar/sdl2/2.0.10/include/SDL2
+        #/Users/alexander/mydev/tools/audio_video/ffmpeg_macos/include
+        )
+
+set(FFMPEG_LIB_PATH
+        /root/mydev/tools/ffmpeg/ffmpeg_ubuntu/ffmpeg-n4.4-152-gdf288deb9b-linux64-gpl-shared-4.4/lib
+        #/Users/alexander/mydev/tools/audio_video/ffmpeg_macos/lib
+        )
+set(SDL2_LIB_PATH
+        /usr/lib/x86_64-linux-gnu
+        #/usr/local/Cellar/sdl2/2.0.10/lib
+        )
 target_link_libraries(
         ffplay
 
@@ -59,7 +58,6 @@ target_link_libraries(
         -L${FFMPEG_LIB_PATH} -lavcodec
         -L${FFMPEG_LIB_PATH} -lavfilter
         -L${FFMPEG_LIB_PATH} -lavutil
-#        -L${FFMPEG_LIB_PATH} -lavresample
         -L${FFMPEG_LIB_PATH} -lswresample
         -L${FFMPEG_LIB_PATH} -lswscale
         -L${FFMPEG_LIB_PATH} -lavdevice
@@ -69,9 +67,4 @@ target_link_libraries(
         -lpthread
         -ldl
         -lm
-
-#        -L/usr/local/Cellar/x264/r2917_1/lib -lx264
-#        -L/usr/local/Cellar/x265/3.3/lib -lx265
-        -L/usr/local/Cellar/x264/r2917_1/lib -lx264
-        -L/usr/local/Cellar/x265/3.3/lib -lx265
 )

@@ -4385,6 +4385,7 @@ int main(int argc, char **argv) {
     input_filename = "http://ivi.bupt.edu.cn/hls/cctv13.m3u8";// CCTV-13新闻
     input_filename = "/root/视频/心愿.mp4";
     input_filename = "/root/视频/tomcat_video/test.mp4";
+    input_filename = "/root/音乐/KuGou/甘十九妹(甘十九妹主题曲).mp3";
     if (!input_filename) {
         show_usage();
         av_log(nullptr, AV_LOG_FATAL, "An input file must be specified\n");
