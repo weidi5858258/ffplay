@@ -4373,7 +4373,6 @@ int main(int argc, char **argv) {
     input_filename = "https://meiju.qhqsnedu.com/20181202/zbUvAw69/2000kb/hls/index.m3u8";
     input_filename = "https://cdn1.ibizastream.biz:441/free/1/playlist_dvr.m3u8";// *
     input_filename = "/Users/alexander/Movies/Movies/广告-20200511135626.h264";
-    input_filename = "https://zb3.qhqsnedu.com/live/zhouxingxinga/playlist.m3u8";// 周星驰
     input_filename = "/Users/alexander/Downloads/小品-吃面.mp4";
     input_filename = "https://fangao.qhqsnedu.com/video/20190901/88c29da8beab47778c7329ec9444a9a4/cloudv-transfer/55555555ps61060q5556p165341q8o3r_f533a63031c74bbdb159da0479f79482_0_3.m3u8";
     input_filename = "http://ivi.bupt.edu.cn/hls/cctv6hd.m3u8";// CCTV-6综合高清
@@ -4382,10 +4381,10 @@ int main(int argc, char **argv) {
     input_filename = "http://ivi.bupt.edu.cn/hls/cctv1hd.m3u8";// CCTV-1综合高清
     input_filename = "http://101.72.196.41/r/baiducdnct.inter.iqiyi.com/tslive/c16_lb_huaijiujuchang_1080p_t10/c16_lb_huaijiujuchang_1080p_t10.m3u8";
     input_filename = "/Users/alexander/Movies/AQUAMAN_Trailer_2_4K_ULTRA_HD_NEW2018.webm";
-    input_filename = "http://ivi.bupt.edu.cn/hls/cctv13.m3u8";// CCTV-13新闻
     input_filename = "/root/视频/心愿.mp4";
     input_filename = "/root/视频/tomcat_video/test.mp4";
-    input_filename = "/root/音乐/KuGou/甘十九妹(甘十九妹主题曲).mp3";
+    input_filename = "/Users/v_wangliwei/Movies/动态修改UI演示.mov";
+    input_filename = "http://183.207.248.71:80/cntv/live1/CCTV-1/cctv-6";
     if (!input_filename) {
         show_usage();
         av_log(nullptr, AV_LOG_FATAL, "An input file must be specified\n");

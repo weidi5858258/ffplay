@@ -16,41 +16,26 @@ include_directories(.)
 add_executable(
         ffplay
 
-        url.h
-        avio.h
-        libm.h
-        config.h
-        network.h
-        va_copy.h
-        cmdutils.h
-        cmdutils.c
-        intfloat.h
-        rational.h
-        attributes.h
-        os_support.h
-        mathematics.h
-
         ffplay.cpp
+        cmdutils.c
 )
 
 #要包含的头文件
 include_directories(
-        /usr/include
-        /usr/include/lame
-        /usr/include/SDL2
-        /root/mydev/tools/ffmpeg/ffmpeg_ubuntu/ffmpeg-n4.4-152-gdf288deb9b-linux64-gpl-shared-4.4/include
-        #/usr/local/Cellar/sdl2/2.0.10/include/SDL2
-        #/Users/alexander/mydev/tools/audio_video/ffmpeg_macos/include
-        )
+        # macOS
+        /usr/local/Cellar/ffmpeg/4.4.1_3/include
+        /usr/local/Cellar/sdl2/2.0.18/include/SDL2
+        # Ubuntu
+        # /root/mydev/tools/ffmpeg/ffmpeg_ubuntu/ffmpeg-n4.4-152-gdf288deb9b-linux64-gpl-shared-4.4/include
+        # /usr/include/SDL2
+)
 
-set(FFMPEG_LIB_PATH
-        /root/mydev/tools/ffmpeg/ffmpeg_ubuntu/ffmpeg-n4.4-152-gdf288deb9b-linux64-gpl-shared-4.4/lib
-        #/Users/alexander/mydev/tools/audio_video/ffmpeg_macos/lib
-        )
-set(SDL2_LIB_PATH
-        /usr/lib/x86_64-linux-gnu
-        #/usr/local/Cellar/sdl2/2.0.10/lib
-        )
+# macOS
+set(FFMPEG_LIB_PATH /usr/local/Cellar/ffmpeg/4.4.1_3/lib)
+set(SDL2_LIB_PATH /usr/local/Cellar/sdl2/2.0.18/lib)
+# Ubuntu
+# set(FFMPEG_LIB_PATH /root/mydev/tools/ffmpeg/ffmpeg_ubuntu/ffmpeg-n4.4-152-gdf288deb9b-linux64-gpl-shared-4.4/lib)
+# set(SDL2_LIB_PATH /usr/lib/x86_64-linux-gnu)
 target_link_libraries(
         ffplay
 
@@ -64,6 +49,7 @@ target_link_libraries(
         -L${FFMPEG_LIB_PATH} -lpostproc
         -L${SDL2_LIB_PATH}   -lSDL2
         -L${SDL2_LIB_PATH}   -lSDL2main
+
         -lpthread
         -ldl
         -lm
